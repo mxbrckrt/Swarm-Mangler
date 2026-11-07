@@ -186,6 +186,12 @@
               <span class="lang-fr">20. Tableau des Paramètres</span>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="#ch-credits" style="color: var(--accent-cyan); font-weight: 600;">
+              <span class="lang-en">21. Credits &amp; Research</span>
+              <span class="lang-fr">21. Crédits &amp; Recherche</span>
+            </a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -252,10 +258,10 @@
           You do <strong>not</strong> need a 16-channel array or a multichannel sound card to enjoy Swarm-Mangler. To test or compose on a computer:
           <br>&bull; Set <code>n&deg; of channels</code> to <code>2</code> in the main header.
           <br>&bull; Open <code>output matrix patch</code> and click <code>diagonal</code>. Sources 1 and 2 are routed directly to outputs 1 (Left) and 2 (Right).
-          <br>&bull; The  spatializer and FDN reverb adapt smoothly to a standard stereo or binaural headphone experience.
+          <br>&bull; The spatializer and FDN reverb adapt smoothly to a standard stereo or binaural headphone experience.
         </p>
         <p class="lang-fr">
-          Vous n'avez <strong>pas besoin</strong> d'une couronne de 16 enceintes ni d'une carte réseau multicanale pour faire tourner Swarm-Mangler. Pour travailler sur votre ordinateur  au casque :
+          Vous n'avez <strong>pas besoin</strong> d'une couronne de 16 enceintes ni d'une carte réseau multicanale pour faire tourner Swarm-Mangler. Pour travailler sur votre ordinateur au casque :
           <br>&bull; Réglez <code>n&deg; of channels</code> sur <code>2</code> dans l'entête principal.
           <br>&bull; Ouvrez <code>output matrix patch</code> et cliquez sur <code>diagonal</code>. Les sources sont assignées directement sur les canaux 1 (Gauche) et 2 (Droite).
           <br>&bull; Le spatialiseur balistique et la réverbération FDN s'adaptent instantanément pour une écoute stéréo ou au casque.
@@ -313,10 +319,10 @@
           <div class="card-icon">&#x26A1;</div>
           <h4><span class="lang-en">4. Turn ON the Audio Engine</span><span class="lang-fr">4. Allumer le Moteur Audio</span></h4>
           <p class="lang-en">
-            Close the status window and click the round <strong>ezdac~</strong> button. When illuminated in <strong>green</strong>, audio DSP is active and ready to output sound.
+            Close the status window and click the round loudspeaker button. When illuminated in <strong>green</strong>, audio DSP is active and ready to output sound.
           </p>
           <p class="lang-fr">
-            Fermez la fenêtre et cliquez sur le gros bouton rond <strong>ezdac~</strong>. Lorsqu'il est allumé en <strong>vert</strong>, le moteur DSP est actif et prêt à diffuser.
+            Fermez la fenêtre et cliquez sur le gros bouton hautparleur rond. Lorsqu'il est allumé en <strong>vert</strong>, le moteur DSP est actif et prêt à diffuser.
           </p>
         </div>
       </div>
@@ -404,11 +410,11 @@
 
       <ul>
         <li>
-          <span class="lang-en"><strong>Choose where you want your soundfile to be written:</strong> Click the <code>open</code> button to select your destination directory and name your audio take.</span>
-          <span class="lang-fr"><strong>Choix du fichier de destination :</strong> Cliquez sur <code>open</code> pour choisir l'emplacement sur votre disque et nommer votre prise.</span>
+          <span class="lang-en"><strong>Choose where you want your soundfile to be written:</strong> Click the <kbd>open</kbd> button to select your destination directory and name your audio take.</span>
+          <span class="lang-fr"><strong>Choix du fichier de destination :</strong> Cliquez sur <kbd>open</kbd> pour choisir l'emplacement sur votre disque et nommer votre prise.</span>
         </li>
         <li>
-          <span class="lang-en"><strong>Automatic Channel Count:</strong> The recorder automatically listens to <code>n&deg; of channels</code> and adapts its recording tracks (from 1 up to 8 channels).</span>
+          <span class="lang-en"><strong>Automatic Channel Count:</strong> The recorder automatically listens to <kbd>n&deg; of channels</kbd> and adapts its recording tracks (from 1 up to 8 channels).</span>
           <span class="lang-fr"><strong>Adaptation automatique du nombre de canaux :</strong> L'enregistreur s'adapte automatiquement au nombre de canaux actif (de 1 à 8 canaux).</span>
         </li>
         <li>
@@ -675,7 +681,7 @@
       <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
     </section>
 
-    <!-- CHAPTER 9: HARMONIC MODAL QUANTIZER -->
+        <!-- CHAPTER 9: HARMONIC MODAL QUANTIZER -->
     <section class="chapter" id="ch-harmonic-scales">
       <div class="chapter-header">
         <span class="chapter-number">
@@ -683,16 +689,44 @@
           <span class="lang-fr">Chapitre 09 &bull; Harmonie &amp; Gammes</span>
         </span>
         <h2>
-          <span class="lang-en">Harmonic Modal Quantizer (<code>harmony_presets.json</code>)</span>
-          <span class="lang-fr">Quantificateur Modal Harmonique (<code>harmony_presets.json</code>)</span>
+          <span class="lang-en">Harmonic Modal Quantizer</span>
+          <span class="lang-fr">Quantificateur Modal Harmonique</span>
         </h2>
       </div>
 
+      <div class="callout info">
+        <div class="callout-title">&#x1F4D6; <span class="lang-en">How the Quantizer &amp; Pitch Ambitus Work</span><span class="lang-fr">Fonctionnement du Quantificateur &amp; des Ambitus Min/Max (Guide Débutant)</span></div>
+        <p class="lang-en">
+          To understand why the pitch controls are structured this way, here is how the engine determines note pitch:
+          <br><br>
+          <strong>1. Continuous Mode (GUI: toggle <kbd>Random pitch is ON</kbd> / internal: <code>harmonicMode 0</code>):</strong>
+          <br>The pitch sweep randomly picks any decimal playback speed directly between the sliders <kbd>min</kbd> and <kbd>max</kbd> (e.g. 0.842 to 1.193). It is an analog, unquantized tape-varispeed effect.
+          <br><br>
+          <strong>2. Modal Quantized Mode (GUI: toggle <kbd>Modal pitch is ON</kbd> / internal: <code>harmonicMode 1</code>):</strong>
+          <br>&bull; <strong>Note Selection &amp; Microtonality:</strong> The engine picks an interval defined in <strong>fractional semitones</strong> from the selected preset menu <kbd>Harmony</kbd> (sourced from <code>harmony_presets.json</code>, e.g. Messiaen, Xenakis, or microtonal/acoustic beatings like Radigue's <code>[0.08, 0.16, 7.04]</code>) and converts it continuously without rounding into a playback speed ratio: <em>Ratio = 2^(semitones / 12)</em>.
+          <br>&bull; <strong>Role of Sliders <kbd>min</kbd> &amp; <kbd>max</kbd>:</strong> They do <em>not</em> clip or filter note numbers; instead, they define the <strong>Octave Tessitura (Ambitus)</strong> of the polyphonic swarm.
+          <br>&bull; <em>Concrete Example:</em> If you set the sliders to <code>0.5</code> (-1 octave) and <code>2.0</code> (+1 octave), the engine randomly distributes the scale intervals across a 2-octave window using discrete octave factors (0.5x, 1.0x, 2.0x).
+          <br>&bull; <em>Result:</em> Even when firing all 32 voices simultaneously, every grain remains strictly faithful to the chosen harmonic, spectral, or micro-interferential relationship while cleanly dispersing across the defined register!
+        </p>
+        <p class="lang-fr">
+          Pour dissiper le côté énigmatique des réglages de pitch, voici comment le moteur détermine la hauteur de chaque grain :
+          <br><br>
+          <strong>1. Mode Continu (Interface : interrupteur <kbd>Random pitch is ON</kbd> / interne : <code>harmonicMode 0</code>) :</strong>
+          <br>La vitesse de lecture tire une valeur décimale aléatoire brute comprise strictement entre les curseurs <kbd>min</kbd> et <kbd>max</kbd> (ex. de 0.842 à 1.193). C'est un varispeed continu de bande magnétique, sans repère de notes.
+          <br><br>
+          <strong>2. Mode Quantifié Modal (Interface : interrupteur <kbd>Modal pitch is ON</kbd> / interne : <code>harmonicMode 1</code>) :</strong>
+          <br>&bull; <strong>Tirage de note &amp; Microtonalité :</strong> Le moteur pioche un intervalle exprimé en <strong>demi-tons fractionnaires</strong> dans le menu déroulant <kbd>Harmony</kbd> (issu du fichier <code>harmony_presets.json</code>, comme Messiaen ou les battements fins à la Radigue <code>[0.08, 0.16, 7.04]</code>). Cette valeur décimale est convertie sans aucun arrondi en ratio de vitesse : <em>Ratio = 2^(demi-tons / 12)</em>.
+          <br>&bull; <strong>Rôle des curseurs <kbd>min</kbd> et <kbd>max</kbd> :</strong> Ces réglages ne tronquent pas les notes ; ils définissent <strong>l'ambitus d'octaves (tessiture)</strong> accordé au nuage polyphonique.
+          <br>&bull; <em>Exemple concret :</em> Si vous réglez les curseurs sur <code>0.5</code> (-1 octave) et <code>2.0</code> (+1 octave), les intervalles de la gamme sont transposés par sauts d'octaves discrets (facteurs 0.5x, 1.0x ou 2.0x) sur un espace de 2 octaves complètes.
+          <br>&bull; <em>Résultat musical :</em> Même en déclenchant 32 voix en même temps, tous les grains respectent rigoureusement les proportions harmoniques, spectrales ou d'interférences choisies, tout en se déployant dans le registre voulu !
+        </p>
+      </div>
+
       <p class="lang-en">
-        When <code>Rndm pitch ON</code> is active, random transpositions in Mode 1 are locked to 12-TET intervals from <code>harmony_presets.json</code> with discrete octave multipliers:
+        When the toggle <kbd>Modal pitch is ON</kbd> is active, random transpositions in Mode 1 are locked to continuous fractional intervals from <code>harmony_presets.json</code> (supporting modal scales, microtonal offsets, acoustic beating ratios, and inharmonic spectra) multiplied by discrete octave shifts:
       </p>
       <p class="lang-fr">
-        Lorsque <code>Rndm pitch ON</code> est actif, les transpositions aléatoires du Mode 1 sont quantifiées selon les intervalles d'une gamme musicale choisie dans <code>harmony_presets.json</code> avec transposition d'octaves discrètes :
+        Lorsque le bouton <kbd>Modal pitch is ON</kbd> est enclenché, les transpositions aléatoires du Mode 1 sont quantifiées selon les intervalles continus (décimaux) de <code>harmony_presets.json</code> — incluant modes harmoniques, séries microtonales, interférométrie acoustique et spectres inharmoniques — combinés à des facteurs d'octaves discrets :
       </p>
 
       <div class="table-wrapper">
@@ -701,12 +735,14 @@
             <tr>
               <th><span class="lang-en">Preset Name</span><span class="lang-fr">Nom du Preset</span></th>
               <th><span class="lang-en">Context / Style</span><span class="lang-fr">Contexte / Style</span></th>
-              <th><span class="lang-en">Intervals (Semitones)</span><span class="lang-fr">Intervalles (Demi-tons)</span></th>
+              <th><span class="lang-en">Intervals (Fractional Semitones)</span><span class="lang-fr">Intervalles (Demi-tons Décimaux)</span></th>
             </tr>
           </thead>
           <tbody>
-            <tr><td><code>risset_InharmonicBell</code></td><td>Jean-Claude Risset (Inharmonic Bell)</td><td><code>[0, 3, 7, 14, 18, 26, 33]</code></td></tr>
-            <tr><td><code>risset_ParadoxicalPitch</code></td><td>Risset Shepard Glissando</td><td><code>[0, 6, 13, 25, 38, 51]</code></td></tr>
+            <tr><td><code>radigue_TrilogieDeLaMort</code></td><td>Éliane Radigue Beating Interferometry</td><td><code>[0.08, 0.16, 7.04, 7.12, 12.06]</code></td></tr>
+            <tr><td><code>grisey_Partiels_Harmonics</code></td><td>Gérard Grisey Spectral Formants</td><td><code>[0.0, 12.0, 19.02, 24.0, 27.86, 31.02]</code></td></tr>
+            <tr><td><code>risset_InharmonicBell</code></td><td>Jean-Claude Risset Inharmonic Bell</td><td><code>[0, 3, 7, 14, 18, 26, 33]</code></td></tr>
+            <tr><td><code>risset_ParadoxicalPitch</code></td><td>Risset Shepard Glissando Matrix</td><td><code>[0, 6, 13, 25, 38, 51]</code></td></tr>
             <tr><td><code>messiaen_Mode2_Octatonic</code></td><td>Olivier Messiaen Mode 2</td><td><code>[1, 3, 4, 6, 7, 9, 10, 12]</code></td></tr>
             <tr><td><code>xenakis_SieveAlpha</code></td><td>Iannis Xenakis Integer Sieve</td><td><code>[1, 4, 7, 9, 13, 16]</code></td></tr>
             <tr><td><code>ligeti_AtmospheresCluster</code></td><td>György Ligeti Micropolyphony</td><td><code>[1, 2, 3, 4, 5, 6]</code></td></tr>
@@ -734,17 +770,17 @@
 
       <p class="lang-en">
         Draw speed envelopes directly in the <code>[curve]</code> box or use presets:
-        <br>&bull; <code>init</code> : Linear rise (0.0 to 1.0).
-        <br>&bull; <code>dive</code> : Exponential dive-bomb (-0.8 curve).
-        <br>&bull; <code>riser</code> : Ascending tension sweep (+0.8 curve).
-        <br>&bull; <code>random</code> : Multi-point bezier curve.
+        <br>&bull; <kbd>init</kbd> : Linear rise (0.0 to 1.0).
+        <br>&bull; <kbd>dive</kbd> : Exponential dive-bomb (-0.8 curve).
+        <br>&bull; <kbd>riser</kbd> : Ascending tension sweep (+0.8 curve).
+        <br>&bull; <kbd>random</kbd> : Multi-point bezier curve.
       </p>
       <p class="lang-fr">
         Dessinez des courbes d'évolution de vitesse directement dans <code>[curve]</code> ou chargez des formes :
-        <br>&bull; <code>init</code> : Rampe linéaire (0.0 à 1.0).
-        <br>&bull; <code>dive</code> : Chute exponentielle piquée (courbe -0.8).
-        <br>&bull; <code>riser</code> : Montée en tension exponentielle (courbe +0.8).
-        <br>&bull; <code>random</code> : Courbe aléatoire multi-points.
+        <br>&bull; <kbd>init</kbd> : Rampe linéaire (0.0 à 1.0).
+        <br>&bull; <kbd>dive</kbd> : Chute exponentielle piquée (courbe -0.8).
+        <br>&bull; <kbd>riser</kbd> : Montée en tension exponentielle (courbe +0.8).
+        <br>&bull; <kbd>random</kbd> : Courbe aléatoire multi-points.
       </p>
 
       <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
@@ -1249,6 +1285,72 @@
           </tbody>
         </table>
       </div>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 21: CREDITS & RESEARCH REFERENCES -->
+    <section class="chapter" id="ch-credits">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 21 &bull; Acknowledgments</span>
+          <span class="lang-fr">Chapitre 21 &bull; Crédits &amp; Références</span>
+        </span>
+        <h2>
+          <span class="lang-en">Institutional Credits &amp; Theoretical Framework</span>
+          <span class="lang-fr">Crédits Institutionnels &amp; Cadre Théorique</span>
+        </h2>
+      </div>
+
+      <div class="card-grid">
+        <div class="card highlight-gold">
+          <h4>GRAME &mdash; Centre National de Création Musicale</h4>
+          <p class="lang-en">
+            Developed in part within artistic residencies and multitrack studio workflows at GRAME-CNCM (Lyon, France). Specialized multi-loudspeaker spatial arrays and live diffusion research.
+            <br>&bull; <a href="https://github.com/grame-cncm" target="_blank" rel="noopener">GRAME GitHub Organization</a>
+            <br>&bull; <a href="https://grame.fr" target="_blank" rel="noopener">grame.fr</a>
+          </p>
+          <p class="lang-fr">
+            Développé en partie dans le cadre des résidences et dispositifs de recherche studio du GRAME-CNCM (Lyon). Conçu pour l'exploitation en régie multicanale et dômes d'enceintes.
+            <br>&bull; <a href="https://github.com/grame-cncm" target="_blank" rel="noopener">Organisation GitHub de GRAME</a>
+            <br>&bull; <a href="https://grame.fr" target="_blank" rel="noopener">grame.fr</a>
+          </p>
+        </div>
+
+        <div class="card highlight-cyan">
+          <h4>Cycling '74 &mdash; Max Community</h4>
+          <p class="lang-en">
+            Built using native Max 8 / Max 9 architectures: standard GenExpr algorithms, Multichannel signal wrappers (<code>mc.*</code>), and JavaScript embedded bridges.
+            <br>&bull; <a href="https://cycling74.com" target="_blank" rel="noopener">Cycling '74</a>
+          </p>
+          <p class="lang-fr">
+            Développé sur les environnements natifs Max 8 et Max 9 de Cycling '74 : compilations GenExpr temps réel, moteur multicanal natif (<code>mc.*</code>) et moteur JavaScript intégré.
+            <br>&bull; <a href="https://cycling74.com" target="_blank" rel="noopener">cycling74.com</a>
+          </p>
+        </div>
+      </div>
+
+      <h3>
+        <span class="lang-en">Theoretical Papers &amp; Research Foundations</span>
+        <span class="lang-fr">Fondements Théoriques &amp; Articles de Recherche</span>
+      </h3>
+      <ul>
+        <li>
+          <strong>Spatial Audio Metadata &amp; ADM Architecture :</strong> ITU-R BS.2076 Audio Definition Model (ADM) &amp; AES67 multichannel transmission.
+        </li>
+        <li>
+          <strong>Feedback Delay Networks (FDN) :</strong> Jot, J.-M. &amp; Chaigne, A. (1991). <em>Digital delay networks for designing artificial reverberators</em>. Proc. AES 90th Conv.
+        </li>
+        <li>
+          <strong>Inharmonic &amp; Paradoxical Synthesis :</strong> Risset, J.-C. (1969). <em>An Introductory Catalog of Computer Synthesized Sounds</em>. Bell Laboratories.
+        </li>
+        <li>
+          <strong>Formalized Music &amp; Stochastic Clouds :</strong> Xenakis, I. (1971). <em>Formalized Music: Thought and Mathematics in Composition</em>. Indiana University Press.
+        </li>
+        <li>
+          <strong>Micropolyphony &amp; Textural Clustered Sound :</strong> Ligeti, G. (1961). <em>Atmosphères</em> &amp; structural analysis of dense instrumental motion.
+        </li>
+      </ul>
 
       <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
     </section>
