@@ -1,0 +1,999 @@
+<div class="sidebar-search">
+  <input type="text" id="nav-search-input" placeholder="Search chapters & topics..." aria-label="Search Documentation">
+</div>
+
+<nav class="nav-menu">
+  <div class="nav-group">
+    <div class="nav-group-title">Getting Started</div>
+    <ul>
+      <li class="nav-item"><a href="#ch-overview">1. System Overview</a></li>
+      <li class="nav-item"><a href="#ch-quickstart">2. Quick Start Tutorial</a></li>
+      <li class="nav-item"><a href="#ch-architecture">3. System Architecture</a></li>
+    </ul>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title">Synthesis & Playback</div>
+    <ul>
+      <li class="nav-item"><a href="#ch-polybuffer">4. Polybuffer & File Handling</a></li>
+      <li class="nav-item"><a href="#ch-playback-modes">5. Playback & Pitch Modes</a></li>
+      <li class="nav-item"><a href="#ch-harmonic-scales">6. Harmonic Quantizer</a></li>
+      <li class="nav-item"><a href="#ch-function-bpf">7. Curve Envelope (BPF)</a></li>
+      <li class="nav-item"><a href="#ch-triggers">8. Triggers & Stochastic Cloud</a></li>
+    </ul>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title">Spatialization & Routing</div>
+    <ul>
+      <li class="nav-item"><a href="#ch-spatialization">9. Ballistic ADM Spatializer</a></li>
+      <li class="nav-item"><a href="#ch-telemetry-osc">10. 3D OSC Telemetry & Web Monitor</a></li>
+      <li class="nav-item"><a href="#ch-matrix-routing">11. 32x64 Paged Matrix</a></li>
+      <li class="nav-item"><a href="#ch-multichannel-reverb">12. Multichannel FDN Reverb</a></li>
+    </ul>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title">Operation & Reference</div>
+    <ul>
+      <li class="nav-item"><a href="#ch-monitoring">13. Visual Voice Monitor</a></li>
+      <li class="nav-item"><a href="#ch-panic">14. Selective Voice Panic</a></li>
+      <li class="nav-item"><a href="#ch-presets-recording">15. Presets & Multitrack Record</a></li>
+      <li class="nav-item"><a href="#ch-parameter-ref">16. Complete Parameter Reference</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="nav-footer">
+  &copy; 2026 Max Bruckert &bull; Compatible Max 8 / 9
+</div>
+<!-- HERO HEADER -->
+<header class="hero" id="top">
+  <div class="hero-tagline">Acousmatic Spatial Instrument & Diffusion Framework</div>
+  <h1>Swarm-Mangler</h1>
+  <p class="lead">
+    A 32-voice polyphonic soundfile granulator, kinetic trajectory spatializer, and multichannel diffusion matrix designed for immersive loudspeaker arrays, Dante network environments, real-time WebGL telemetry, and acousmatic concert performance.
+  </p>
+
+  <div class="hero-meta">
+    <div class="meta-pill"><strong>Author:</strong> Max Bruckert (2026)</div>
+    <div class="meta-pill"><strong>Polyphony:</strong> 32 Parallel Audio Voices</div>
+    <div class="meta-pill"><strong>Audio I/O:</strong> 32 Ins &times; 64 Dante Outs</div>
+    <div class="meta-pill"><strong>Platform:</strong> Cycling '74 Max 8 & 9 (MC & Gen) + WebGL Three.js Monitor</div>
+  </div>
+</header>
+
+<!-- CHAPTER 1: OVERVIEW -->
+<section class="chapter" id="ch-overview">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 01</span>
+    <h2>System Overview & Design Philosophy</h2>
+  </div>
+
+  <p class="lead-sub">
+    Swarm-Mangler bridges high-density polyphonic sample manipulation with sample-accurate multichannel spatial choreography and low-latency 3D telemetry.
+  </p>
+
+  <p>
+    In contemporary electroacoustic, acousmatic, and spatial music, sound diffusion is rarely static. The acoustic identity of a sound object is defined not merely by its spectral envelope, but by its <em>kinetic velocity</em>, <em>spatial dispersion</em>, and <em>inter-loudspeaker decorrelation</em>. Swarm-Mangler treats space as an expressive, ballistic dimension synchronized with microtonal transposition, time-stretching, and dynamic clouds.
+  </p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">&#x26A1;</div>
+      <h3>32-Voice Parallel Engine</h3>
+      <p>Powered by <code>[mcs.poly~ player-core 32]</code>, providing independent varispeed pitch ramps, phase-vocoder time stretching, dynamic amplitude shaping, and ballistic spatialization per voice.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">&#x1F30C;</div>
+      <h3>Ballistic Spatial Engine</h3>
+      <p>Combines non-linear ease-in trajectory generators (<code>whiplash.gendsp</code>) with high-contrast equal-power cosine beam forming and distance-based air absorption (<code>adm_panner.gendsp</code>).</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">&#x1F3B6;</div>
+      <h3>Harmonic Modal Quantizer</h3>
+      <p>Constrains random pitch shifts to microtonal and historical modal scales (Risset inharmonic bell, Messiaen modes, Xenakis sieves, Debussy, Ligeti clusters) with discrete octave bounds.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">&#x1F504;</div>
+      <h3>32&times;64 Paged Matrix</h3>
+      <p>A static 16&times;16 viewport visual router (<code>matrix_32x64.js</code>) addressing up to 64 physical Dante/DAC outputs with 1-click diagonal patching, channel locks, and pattr storage.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">&#x1F30A;</div>
+      <h3>Multichannel FDN Reverb</h3>
+      <p>Unitary Hadamard 4-delay Feedback Delay Network (<code>fdn_multireverb.gendsp</code>) with rotating multi-phase circular LFO modulation and golden-ratio prime detuning per channel.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">&#x1F4E1;</div>
+      <h3>Real-Time 3D WebGL Telemetry</h3>
+      <p>Atomic sample-accurate <code>/adm/obj/&lt;id&gt;/xyz</code> telemetry paired with an autonomous Three.js monitor (visionOS glass style) supporting live CSV/XLSX speaker layout drag & drop.</p>
+    </div>
+  </div>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 2: QUICK START -->
+<section class="chapter" id="ch-quickstart">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 02</span>
+    <h2>Quick Start Tutorial</h2>
+  </div>
+
+  <p class="lead-sub">Follow these 6 essential steps to load soundfiles, configure routing, launch the 3D monitor, and fire your first spatial sound swarm.</p>
+
+  <ol style="padding-left: 24px; margin-bottom: 24px; color: #cbd5e1;">
+    <li style="margin-bottom: 16px;">
+      <strong>Step 1: Load Audio Files into the Pool</strong><br>
+      In the <code>-polybuffer-</code> module, click <em>"Load soundfiles"</em> or drag-and-drop a folder of audio files (WAV, AIFF, FLAC) directly from Finder onto the drop zone. The total file count will update immediately.
+    </li>
+    <li style="margin-bottom: 16px;">
+      <strong>Step 2: Define Active Loudspeaker Channels</strong><br>
+      In the main patcher header, adjust the <code>n&deg; of channels</code> number box (e.g., <code>6</code> for hexagonal studio setups, <code>28</code> for concert domes). This locks all unused matrix columns and configures both the ADM panner and FDN reverb.
+    </li>
+    <li style="margin-bottom: 16px;">
+      <strong>Step 3: Connect Matrix Routing to Physical Outputs</strong><br>
+      Open the <code>output matrix patch</code>. Click the <code>diagonal</code> button to automatically establish a 1:1 patch ($1\rightarrow 1, 2\rightarrow 2 \dots$) up to the current active channel count, or patch custom crosspoints manually.
+    </li>
+    <li style="margin-bottom: 16px;">
+      <strong>Step 4: Launch the 3D WebGL Monitor</strong><br>
+      Open <code>swarm_mangler_3d_spatial_viewer.html</code> in Google Chrome. Drag & drop your loudspeaker configuration file (e.g., <code>gramestudio-speaker-setup.csv</code> or <code>maxBstudio-speaker-setup.csv</code>) directly onto the lower-left drop zone. The speaker array appears immediately, normalized to the virtual hall boundaries.
+    </li>
+    <li style="margin-bottom: 16px;">
+      <strong>Step 5: Choose a Playback Mode &amp; Modulation</strong><br>
+      Set <code>Playback mode</code> to <code>Varispeed ON</code>. Set <code>glissandis-durations</code> to <code>500 ms</code>, <code>min pitch</code> to <code>0.8</code>, and <code>max pitch</code> to <code>1.5</code>. Enable <code>Rndm pitch ON</code> to explore modal scales (e.g., <em>risset_InharmonicBell</em>). Set <code>is3D</code> to <code>0</code> (planar $Z=0.5$ median ear level) or <code>1</code> (full 3D volumetric trajectories).
+    </li>
+    <li style="margin-bottom: 16px;">
+      <strong>Step 6: Trigger Sounds &amp; Launch a Cloud</strong><br>
+      Click <code>trig one file</code> to hear and see a single ballistic spatial event. Then set <code>interval</code> to <code>120 ms</code>, <code>jitter</code> to <code>50%</code>, <code>occurrences</code> to <code>16</code>, and click <code>start arpeggio</code> to launch an immersive kinetic swarm.
+    </li>
+  </ol>
+
+  <div class="callout tip">
+    <div class="callout-title">&#x1F4A1; Pro-Tip: Selective Panic &amp; Scene Purge</div>
+    <p>If soundfiles ring or repeat too long, press the <strong>"stop all"</strong> button. The master engine applies a selective pop-free fade-out (<code>stopDur</code>) to active voices. Furthermore, clicking <strong>"Clear Sources"</strong> in the 3D monitor or sending <code>/clearsources</code> instantly extinguishes any remaining visual sources without disrupting the audio DSP.</p>
+  </div>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 3: ARCHITECTURE -->
+<section class="chapter" id="ch-architecture">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 03</span>
+    <h2>System Architecture &amp; Signal Flow</h2>
+  </div>
+
+  <p class="lead-sub">A decoupled dual-engine topology separating asynchronous algorithmic decision-making from deterministic sample-rate DSP.</p>
+
+  <div class="diagram-box">
+    <pre>
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                                   SWARM-MANGLER TOPOLOGY                                │
+└────────────────────────────────────────────────────────────────────────────────────────┘[Folder / Finder] ──────► [polybuffer~ my-sfiles]
+│ (Shortnames, durations, chan count)
+▼
+[Control Triggers] ────► [js master_engine.js] ◄──── [Harmony Dict / Presets]
+(Manual / Stochastic)              │
+├──► [jsui poly_monitor.js] (Max Patch Dashboard)
+│
+├──► [udpsend / WebSocket Bridge: localhost:8080]
+│           │
+│           ▼
+│    [swarm_mangler_3d_spatial_viewer.html]
+│    (Three.js WebGL / CSV Speaker Ingestion)
+│
+▼ (Voice Dispatch: target <id>, play <params>)
+┌───────────────────────────────────────────────────────────────────────────────────────┐
+│                            [poly~ player-core 32] (Voice x)                            │
+│                                                                                       │
+│  [groove~ my-sfiles] ──► [Equal-Power Mono Sum] ──► [dynamic envelope: zigzag~]     │
+│            ▲                                                    │                     │
+│            │ (Varispeed / Wave BPF / Pitch Shift)               ▼                     │
+│  [Trajectory Generator: 3x gen~ whiplash] ──────────► [mc.gen~ adm_panner @chans 8]  │
+│            │                                                    │                     │
+│            ▼                                                    ▼                     │
+│  [gen~ 3D_snapshot_sync] ──► [OSC /adm/obj/x/xyz]      (Multichannel Voice Stream)    │
+└─────────────────────────────────────────────────────────────────┬─────────────────────┘
+│
+▼
+[mc.send~ polyplayer-out]
+│
+▼
+[mcs.matrix~ 32 64 @ramp 20] (matrix_32x64)
+│
+┌────────────────────────────┴───────────────────────────┐
+│                                                        │
+▼                                                        ▼
+[mc.gen~ fdn_multireverb.gendsp]                              [Direct Routing Bus]
+│                                                        │
+└────────────────────────────┬───────────────────────────┘
+│
+▼
+[Master Gain: mc.*~]
+│
+┌────────────────────────────┴───────────────────────────┐
+│                                                        │
+▼                                                        ▼
+[mc.dac~ 1 2 3 ... 64]                           [mc.sfrecord~ 8 @24bit]
+(Dante / Multi-Loudspeaker)                      (Live Multitrack Take)
+
+
+Figure 3.1: Complete Control, Audio, and Telemetry Routing Architecture.  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 4: POLYBUFFER -->
+<section class="chapter" id="ch-polybuffer">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 04</span>
+    <h2>Polybuffer &amp; File Handling Engine</h2>
+  </div>
+
+  <p class="lead-sub">Autonomous sample caching with genuine filesystem name tracking and equal-power downmix normalization.</p>
+
+  <h3>1. Genuine Soundfile Name Resolution</h3>
+  <p>
+    Standard Max <code>[polybuffer~]</code> objects assign generic internal identifiers (e.g., <code>my-sfiles.1</code>, <code>my-sfiles.2</code>). Swarm-Mangler intercepts the internal dump stream using the <code>shortname &lt;idx&gt; &lt;name&gt;</code> protocol in <code>master_engine.js</code>. This guarantees:
+  </p>
+  <ul style="padding-left: 24px; margin-bottom: 16px;">
+    <li>Internal audio DSP queries reference the exact buffer symbol (e.g. <code>my-sfiles.14</code>).</li>
+    <li>The visual telemetry dashboard (<code>poly_monitor.js</code>) displays the authentic soundfile name on disk (e.g. <code>bamboo_strike_03.wav</code>).</li>
+  </ul>
+
+  <h3>2. Equal-Power Mono Downmix Normalization</h3>
+  <p>
+    Audio files dropped into the buffer pool may be mono or stereo. Inside each <code>player-core</code> voice, the channel count is dynamically queried:
+  </p>
+  <ul style="padding-left: 24px; margin-bottom: 16px;">
+    <li><strong>Mono files:</strong> Channel 1 is passed directly at unity gain ($1.0$).</li>
+    <li><strong>Stereo files:</strong> Left and Right channels are summed and multiplied by $\frac{1}{\sqrt{2}} \approx 0.7071$ ($-3\text{ dB}$).</li>
+  </ul>
+  <p>
+    This acoustic power compensation guarantees that stereo soundfiles do not overpower mono files or saturate the spatializer input stage.
+  </p>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 5: PLAYBACK & PITCH MODES -->
+<section class="chapter" id="ch-playback-modes">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 05</span>
+    <h2>Playback Modes &amp; Pitch Transposition</h2>
+  </div>
+
+  <p class="lead-sub">Three distinct pitch execution modes with integral duration compensation.</p>
+
+  <h3>Mode Comparison</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Mode Index</th>
+          <th>Mode Name</th>
+          <th>Description</th>
+          <th>Dynamic Controls</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>mode 0</code></td>
+          <td><strong>Straight (Original)</strong></td>
+          <td>Plays buffer at natural speed ($1.0$). Duration equals original buffer length.</td>
+          <td>Attack %, Decay %, Amplitude dB</td>
+        </tr>
+        <tr>
+          <td><code>mode 1</code></td>
+          <td><strong>Varispeed / Random Ramp</strong></td>
+          <td>Linear speed interpolation between <code>transpoMin</code> and <code>transpoMax</code> over <code>transpoDur</code>.</td>
+          <td><code>transpoMin</code>, <code>transpoMax</code>, <code>transpoDur</code>, <code>transpoProba</code>, <code>transpoStable</code></td>
+        </tr>
+        <tr>
+          <td><code>mode 2</code></td>
+          <td><strong>Curve Envelope (BPF)</strong></td>
+          <td>Varispeed driven by a custom breakpoint curve lookup table (<code>pitchcurve</code>).</td>
+          <td>Presets (<code>init</code>, <code>dive</code>, <code>riser</code>, <code>random</code>), Time-stretch toggle</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Integral Duration Compensation Mechanics</h3>
+  <p>
+    When a soundfile is played at a fluctuating varispeed speed ramp from $v_{\text{start}}$ to $v_{\text{end}}$ over ramp duration $T_{\text{ramp}}$, the physical audio buffer is consumed at a non-linear rate:
+  </p>
+  <pre><code>bufferConsumed = T_ramp * ((v_start + v_end) / 2.0)</code></pre>
+  <p>
+    If the entire buffer is consumed before the ramp completes, <code>master_engine.js</code> solves the quadratic kinematic motion equation:
+  </p>
+  <pre><code>delta = v_start^2 + 2 * a * buffer_duration
+effectiveDuration = (sqrt(delta) - v_start) / a
+
+This sample-accurate compensation guarantees that the amplitude envelope generator (zigzag~) terminates in exact synchrony with the end of the soundfile, completely eliminating clicks or hanging voices.
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 6: HARMONIC SCALES -->
+<section class="chapter" id="ch-harmonic-scales">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 06</span>
+    <h2>Harmonic Modal Scale Quantizer</h2>
+  </div>
+
+  <p class="lead-sub">Lock random pitch transpositions to historical microtonal, spectral, and modern harmonic scales.</p>
+
+  <p>
+    When <code>Rndm pitch ON</code> (<code>harmonicMode 1</code>) is activated, random pitch selections in Mode 1 are no longer drawn as continuous floating-point ratios. Instead, speeds are quantized to exact 12-TET interval ratios ($2^{\frac{\text{semitone}}{12}}$) drawn randomly from <code>harmony_presets.json</code>.
+  </p>
+
+  <div class="callout info">
+    <div class="callout-title">&#x1F3BC; Discrete Octave Bounds</div>
+    <p>
+      In this mode, <code>transpoMin</code> and <code>transpoMax</code> represent <em>integer octave multipliers</em>:
+      <br>
+      <code>octaveShift = round(log2(transpo))</code>.
+      <br>
+      A modal pitch degree is randomly selected from the scale and multiplied by $2^k$ octaves.
+    </p>
+  </div>
+
+  <h3>Curated Scale Presets (<code>harmony_presets.json</code>)</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Preset Identifier</th>
+          <th>Musical / Historical Context</th>
+          <th>Intervals (Semitones)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>risset_InharmonicBell</code></td>
+          <td>Jean-Claude Risset's inharmonic spectral bell synthesis</td>
+          <td><code>[0, 3, 7, 14, 18, 26, 33]</code></td>
+        </tr>
+        <tr>
+          <td><code>risset_ParadoxicalPitch</code></td>
+          <td>Endless falling / rising illusory frequency ratios</td>
+          <td><code>[0, 6, 13, 25, 38, 51]</code></td>
+        </tr>
+        <tr>
+          <td><code>messiaen_Mode2_Octatonic</code></td>
+          <td>Olivier Messiaen's second mode of limited transposition</td>
+          <td><code>[1, 3, 4, 6, 7, 9, 10, 12]</code></td>
+        </tr>
+        <tr>
+          <td><code>xenakis_SieveAlpha</code></td>
+          <td>Iannis Xenakis' non-octave repeating integer sieve</td>
+          <td><code>[1, 4, 7, 9, 13, 16]</code></td>
+        </tr>
+        <tr>
+          <td><code>ligeti_AtmospheresCluster</code></td>
+          <td>Gy&ouml;rgy Ligeti's micropolyphonic chromatic cluster</td>
+          <td><code>[1, 2, 3, 4, 5, 6]</code></td>
+        </tr>
+        <tr>
+          <td><code>debussy_LydianDominant</code></td>
+          <td>Claude Debussy's acoustic Lydian dominant scale</td>
+          <td><code>[6, 10, 14, 18]</code></td>
+        </tr>
+        <tr>
+          <td><code>ravel_Daphnis_Maj13</code></td>
+          <td>Maurice Ravel's extended Impressionist polychord</td>
+          <td><code>[4, 7, 11, 14, 18, 21]</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 7: FUNCTION GENERATOR BPF -->
+<section class="chapter" id="ch-function-bpf">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 07</span>
+    <h2>Breakpoint Curve Envelope (<code>function_generator.js</code>)</h2>
+  </div>
+
+  <p class="lead-sub">Sample-accurate breakpoint function (BPF) generator driving <code>[buffer~ pitchcurve]</code>.</p>
+
+  <p>
+    In Mode 2, speed curves are authored directly in the <code>[function pitchcurve]</code> GUI. The JavaScript engine <code>function_generator.js</code> compiles these breakpoints into an ultra-fast lookup buffer (<code>[buffer~ pitchcurve 1024 samps]</code>), read in realtime by <code>[wave~ pitchcurve]</code>.
+  </p>
+
+  <h3>Built-in Curve Presets</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h4><code>init</code> (Linear Ramp)</h4>
+      <p>Initializes a clean linear sweep from 0.0 to 1.0 ($1000\text{ ms}$).</p>
+    </div>
+    <div class="card">
+      <h4><code>dive</code> (Exponential Drop)</h4>
+      <p>Rapid dive bomb gesture with $-0.8$ exponential curvature falling from 1.0 down to 0.0.</p>
+    </div>
+    <div class="card">
+      <h4><code>riser</code> (Exponential Rise)</h4>
+      <p>Ascending tension riser with $+0.8$ exponential curvature rising from 0.0 to 1.0.</p>
+    </div>
+    <div class="card">
+      <h4><code>random</code> (Stochastic Multi-Point)</h4>
+      <p>Generates an $N$-point stochastic bezier curve with randomized curvatures per segment.</p>
+    </div>
+  </div>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 8: TRIGGERS & CLOUD -->
+<section class="chapter" id="ch-triggers">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 08</span>
+    <h2>Triggers &amp; Stochastic Cloud Engine</h2>
+  </div>
+
+  <p class="lead-sub">Deterministic and Poisson-distributed kinetic gesture generation.</p>
+
+  <p>Swarm-Mangler supports three independent trigger methodologies:</p>
+
+  <h3>1. Manual One-Shot</h3>
+  <p>
+    Clicking the <code>trig one file</code> button (or receiving a message on <code>r -external-oneshot-</code>) immediately dequeues the next soundfile according to the active <code>playMode</code>:
+  </p>
+  <ul>
+    <li><strong>Mode 0 (Round-Robin / Urn Random):</strong> Permutates through all loaded buffers without repetition until the pool is exhausted, then automatically reshuffles.</li>
+    <li><strong>Mode 1 (Forward / Sequential Loop):</strong> Advances sequentially ($0, 1, 2, \dots N-1, 0, 1\dots$) through loaded files.</li>
+  </ul>
+
+  <h3>2. Stochastic Cloud Generator (<code>stochastic-cloud.gendsp</code>)</h3>
+  <p>
+    Designed for dense acoustic swarm textures and granular arpeggios:
+  </p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Range</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>interval</code></td>
+          <td>$10 \dots 5000\text{ ms}$</td>
+          <td>Base temporal spacing between successive triggers.</td>
+        </tr>
+        <tr>
+          <td><code>jitter</code></td>
+          <td>$0 \dots 100\%$</td>
+          <td>Stochastic Poisson timing displacement factor.</td>
+        </tr>
+        <tr>
+          <td><code>occurrences</code></td>
+          <td>$1 \dots 128$</td>
+          <td>Total number of bursts emitted in the arpeggio sequence.</td>
+        </tr>
+        <tr>
+          <td><code>loop</code></td>
+          <td><code>0 | 1</code></td>
+          <td>Toggles endless continuous swarm emission vs. finite burst.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 9: SPATIALIZATION -->
+<section class="chapter" id="ch-spatialization">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 09</span>
+    <h2>Ballistic ADM Spatialization Engine</h2>
+  </div>
+
+  <p class="lead-sub">Kinetic acousmatic sound projection with dynamic atmospheric air absorption.</p>
+
+  <h3>1. Coordinate Space Conventions</h3>
+  <p>Swarm-Mangler adheres strictly to Cartesian Audio Definition Model (ADM / ITU-R BS.2076) standards:</p>
+  <div class="card-grid">
+    <div class="card">
+      <h4>X (Azimuth Axis)</h4>
+      <p>Range: $[-1.0 \dots +1.0]$<br>Left: $-1.0$ &bull; Center: $0.0$ &bull; Right: $+1.0$</p>
+    </div>
+    <div class="card">
+      <h4>Y (Depth Axis)</h4>
+      <p>Range: $[-1.0 \dots +1.0]$<br>Back: $-1.0$ &bull; Center: $0.0$ &bull; Front: $+1.0$</p>
+    </div>
+    <div class="card">
+      <h4>Z (Elevation Axis)</h4>
+      <p>Range: $[0.0 \dots 1.0]$<br>Floor: $0.0$ &bull; Median Ear Level: $0.5$ &bull; Zenith/Ceiling: $1.0$</p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <div class="callout-title">&#x1F4CF; 2D vs 3D Elevation Handling (is3D)</div>
+    <p>
+      In standard horizontal ring diffusion (<code>is3D 0</code>), the elevation coordinate $Z$ is strictly locked to <strong>$0.5$</strong> (the geometric median horizontal listening plane of the virtual hall). When <code>is3D 1</code> is enabled, autonomous random trajectories span the entire volume $[0.0 \dots 1.0]$.
+    </p>
+  </div>
+
+  <h3>2. Ballistic Trajectory Generator (<code>whiplash.gendsp</code>)</h3>
+  <p>
+    The <code>whiplash.gendsp</code> module applies a composite non-linear curve blending $80\%$ exponential ease-in curvature with $20\%$ linear momentum:
+  </p>
+  <pre><code>p_lin = clip(current_sample / total_samples, 0.0, 1.0)
+p_curved = (p_lin * 0.2) + (pow(p_lin, curve) * 0.8)
+pos = start_val + (end_val - start_val) * p_curved
+
+The curve parameter ($1.0 \dots 6.0$) adjusts the gesture: at $1.0$, the trajectory is linear; at $3.0$, it produces a sharp, whipping snap into the destination coordinate.
+  <h3>3. High-Contrast ADM Panner (<code>adm_panner.gendsp</code>)</h3>
+  <p>
+    Operating within <code>[mc.gen~ adm_panner]</code>, each loudspeaker channel evaluates its own gain law based on shortest angular distance $\Delta\theta$:
+  </p>
+  <pre><code>beam_limit = (2.0 / speakers) * width_norm
+gain = pow(cos((dist / beam_limit) * (PI * 0.5)), sharpness)  <h3>4. Atmospheric Air Absorption Damping (ISO 9613-1)</h3>
+  <p>
+    As radial distance $d = \sqrt{x^2 + y^2}$ increases, a real-time one-pole lowpass filter progressively rolls off high frequencies from $20\text{ kHz}$ down to $2.5\text{ kHz}$ based on the <code>air_damp</code> parameter.
+  </p>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 10: TELEMETRY OSC & 3D WEB MONITOR -->
+<section class="chapter" id="ch-telemetry-osc">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 10</span>
+    <h2>3D OSC Telemetry &amp; Autonomous WebGL Monitor</h2>
+  </div>
+
+  <p class="lead-sub">Atomic sample-accurate OSC streaming paired with a standalone 3D Three.js spatial monitor.</p>
+
+  <h3>1. Sample-Accurate OSC Latching</h3>
+  <p>
+    Inside each <code>player-core</code> voice, <code>3D_snapshot_sync_polyvoice.gendsp</code> latches $X, Y, Z$ trajectory coordinates on atomic single-sample boundaries, streaming UDP OSC packets:
+  </p>
+  <pre><code>/adm/obj/&lt;voiceID&gt;/xyz &lt;xFloat&gt; &lt;yFloat&gt; &lt;zFloat&gt;</code></pre>
+  <p>
+    Packets are transmitted over UDP to external spatial renderers (Dolby Atmos, SPAT, L-ISA) and bridged to WebSockets (port <code>8080</code>) for the companion HTML5 interface.
+  </p>
+
+  <h3>2. The Standalone 3D Spatial Viewer (<code>swarm_mangler_3d_spatial_viewer.html</code>)</h3>
+  <p>
+    The browser-based monitor provides an intuitive, high-performance 3D visualization styled with modern glassmorphism (visionOS style), optimized for low-end GPUs:
+  </p>
+  <div class="card-grid">
+    <div class="card">
+      <h4>Direct CSV/XLSX Ingestion</h4>
+      <p>Drag & drop real speaker layouts (e.g., Grame 28-speaker dome or private studio rings). Supports European semicolons (<code>;</code>) and comma decimals seamlessly.</p>
+    </div>
+    <div class="card">
+      <h4>Real-Room Proportional Normalization</h4>
+      <p>Automatically calculates radial hall boundaries. Furthest speakers snap to the walls ($\pm 0.92$), and single-height rings map to the virtual hall median ($Y=0.50$).</p>
+    </div>
+    <div class="card">
+      <h4>Amber Glass Visuals</h4>
+      <p>Sources render as translucent amber physical glass spheres with centered high-contrast IDs, grounded drop-shadows, and vertical plumb lines.</p>
+    </div>
+    <div class="card">
+      <h4>Anti-Jitter Spawn Masking</h4>
+      <p>An internal $8\text{ ms}$ hold-off mask absorbs residual packet jitter upon voice triggering, guaranteeing smooth trajectory starts without initial jump artifacts.</p>
+    </div>
+  </div>
+
+  <h3>3. Global Scene Purge (<code>/clearsources</code>)</h3>
+  <p>
+    To prevent visual voice artifacts when sequences are stopped or interrupted in Max, the monitor supports an immediate cleanup routine:
+  </p>
+  <ul>
+    <li>Triggered manually via the on-screen <strong>"Clear Sources"</strong> button.</li>
+    <li>Triggered remotely by sending the OSC message <code>/clearsources</code> or <code>/clear</code> directly from Max.</li>
+  </ul>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 11: MATRIX ROUTING -->
+<section class="chapter" id="ch-matrix-routing">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 11</span>
+    <h2>32&times;64 Paged Routing Matrix (<code>matrix_32x64.js</code>)</h2>
+  </div>
+
+  <p class="lead-sub">Static 16&times;16 viewport routing interface addressing 32 inputs to 64 physical Dante/DAC outputs.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>Source Paging (Top Tabs)</h4>
+      <p><code>SRC 1-16</code> &bull; <code>SRC 17-32</code><br>Switch between the first and second bank of 16 polyphonic sources.</p>
+    </div>
+    <div class="card">
+      <h4>Destination Paging (Right Tabs)</h4>
+      <p><code>OUT 1-16</code> &bull; <code>OUT 17-32</code> &bull; <code>OUT 33-48</code> &bull; <code>OUT 49-64</code><br>Seamlessly route across 64 discrete physical outputs.</p>
+    </div>
+    <div class="card">
+      <h4>Diagonal 1:1 Auto-Patch</h4>
+      <p>The on-screen <code>diagonal</code> button instantly patches inputs to outputs ($1\rightarrow 1, 2\rightarrow 2 \dots$) strictly bounded by the active <code>chans</code> count.</p>
+    </div>
+    <div class="card">
+      <h4>Dynamic Channel Lock</h4>
+      <p>Setting <code>chans &lt;n&gt;</code> automatically greys out and locks all columns $&gt; n$ to prevent accidental patching to unassigned speakers.</p>
+    </div>
+  </div>
+
+  <p>
+    The matrix communicates directly with <code>[mcs.matrix~ 32 64 @ramp 20]</code>, providing smooth $20\text{ ms}$ equal-power crossfades when toggling cross-points to eliminate clicks during live performance.
+  </p>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 12: MULTICHANNEL REVERB -->
+<section class="chapter" id="ch-multichannel-reverb">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 12</span>
+    <h2>Multichannel Spatial FDN Reverb (<code>fdn_multireverb.gendsp</code>)</h2>
+  </div>
+
+  <p class="lead-sub">Lush Feedback Delay Network with orthogonal Hadamard matrixing and rotational chorus.</p>
+
+  <p>
+    The reverb engine (<code>fdn_multireverb.gendsp</code>) is implemented in GenExpr and natively wrapped in <code>[mc.gen~]</code> to process $N$ discrete channels simultaneously:
+  </p>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Range</th>
+          <th>Default</th>
+          <th>Acoustic Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>size</code></td>
+          <td>$0.5 \dots 100$</td>
+          <td><code>90.0</code></td>
+          <td>Perceived acoustic room dimensions and base delay lengths.</td>
+        </tr>
+        <tr>
+          <td><code>decay</code></td>
+          <td>$0 \dots 110$</td>
+          <td><code>82.0</code></td>
+          <td>Feedback gain ($100 = \text{infinite self-oscillation threshold}$).</td>
+        </tr>
+        <tr>
+          <td><code>spread</code></td>
+          <td>$0 \dots 100$</td>
+          <td><code>90.0</code></td>
+          <td>Inter-channel spatial decorrelation &amp; multiphase rotation depth.</td>
+        </tr>
+        <tr>
+          <td><code>absorb</code></td>
+          <td>$0 \dots 100$</td>
+          <td><code>10.0</code></td>
+          <td>High-frequency damping absorption inside the feedback matrix.</td>
+        </tr>
+        <tr>
+          <td><code>tilt</code></td>
+          <td>$-1.0 \dots +1.0$</td>
+          <td><code>-0.1</code></td>
+          <td>Spectral balance filter ($-1.0 = \text{dark/warm}$, $+1.0 = \text{bright/shimmer}$).</td>
+        </tr>
+        <tr>
+          <td><code>predelay</code></td>
+          <td>$0 \dots 100\text{ ms}$</td>
+          <td><code>10.0</code></td>
+          <td>Pre-delay buffer time before entering all-pass diffusion.</td>
+        </tr>
+        <tr>
+          <td><code>speed</code></td>
+          <td>$0.1 \dots 10\text{ Hz}$</td>
+          <td><code>1.0</code></td>
+          <td>Rotational LFO modulation rate around the speaker ring.</td>
+        </tr>
+        <tr>
+          <td><code>depth</code></td>
+          <td>$0 \dots 20$</td>
+          <td><code>5.0</code></td>
+          <td>Pitch modulation / chorus shimmer depth.</td>
+        </tr>
+        <tr>
+          <td><code>mix</code></td>
+          <td>$0 \dots 100\%$</td>
+          <td><code>25.0</code></td>
+          <td>Dry / Wet balance control.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-title">&#x1F4A1; Non-Commensurate Prime Detuning</div>
+    <p>
+      Each loudspeaker channel receives delay lines subtly detuned via the Golden Ratio:
+      <br>
+      <code>ch_detune = sin((ch_idx + 1) * 1.6180339887) * 0.06 * spread</code>.
+      <br>
+      This completely prevents inter-speaker comb filtering and eliminates standing room nodes.
+    </p>
+  </div>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 13: VISUAL MONITOR -->
+<section class="chapter" id="ch-monitoring">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 13</span>
+    <h2>Visual Voice Monitor Dashboard (<code>poly_monitor.js</code>)</h2>
+  </div>
+
+  <p class="lead-sub">Real-time 32-voice status dashboard displaying elapsed progress, dB levels, and file telemetry inside Max.</p>
+
+  <p>
+    The <code>poly_monitor.js</code> visual module provides a high-density $4 \times 8$ matrix tracking all 32 voices:
+  </p>
+  <ul style="padding-left: 24px; margin-bottom: 16px;">
+    <li><strong>Voice Index:</strong> Formatted 2-digit voice number (<code>01</code> to <code>32</code>).</li>
+    <li><strong>Genuine Filename:</strong> Dynamically resolved real soundfile name on disk.</li>
+    <li><strong>Active Illuminated Contour:</strong> Highlights in glowing cyan when active and dims smoothly during decay.</li>
+    <li><strong>Progress Bar:</strong> Shows elapsed playback time vs. total compensated duration in real time.</li>
+    <li><strong>Numeric Telemetry:</strong> Readout of transposition speeds (<code>vspd 1.00&hellip;1.45</code>) and peak amplitude (<code>amp -18.0&hellip;-6.0 dB</code>).</li>
+  </ul>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 14: SELECTIVE PANIC -->
+<section class="chapter" id="ch-panic">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 14</span>
+    <h2>Selective Voice Panic System</h2>
+  </div>
+
+  <p class="lead-sub">Intelligent voice termination without clicks or global DSP interruption.</p>
+
+  <p>
+    Traditional panic buttons abruptly mute entire polyphonic clusters, causing harsh audio clicks and DSP spikes. Swarm-Mangler implements a <strong>Selective Panic Registry</strong>:
+  </p>
+  <ol style="padding-left: 24px; margin-bottom: 16px;">
+    <li><code>activeVoicesRegistry</code> tracks exact expiration timestamps of currently running voices.</li>
+    <li>When <code>panic</code> is triggered, the engine emits <code>target &lt;voiceID&gt;</code> and <code>panic &lt;stopDur&gt;</code> commands <em>exclusively to running voices</em>.</li>
+    <li>Idle voices remain completely untouched, keeping DSP load minimal.</li>
+    <li>Inside <code>player-core</code>, a smooth non-linear fade-out envelope is executed over <code>stopDur</code> milliseconds (default $100\text{ ms}$).</li>
+  </ol>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 15: PRESETS & RECORDING -->
+<section class="chapter" id="ch-presets-recording">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 15</span>
+    <h2>Preset Management &amp; Multitrack Recording</h2>
+  </div>
+
+  <p class="lead-sub">Total recall via pattrstorage and live 8-channel 24-bit multitrack recording.</p>
+
+  <h3>Preset Storage (<code>mangler.json</code>)</h3>
+  <p>
+    Linked to <code>[pattrstorage mangler @savemode 2]</code>:
+  </p>
+  <ul style="padding-left: 24px; margin-bottom: 16px;">
+    <li>Stores all synthesis, spatial, envelope, arpeggio, matrix, and reverb parameters.</li>
+    <li>Instant preset recall without audio glitches via deferred loading.</li>
+    <li>Full inspection windows accessible via <code>clientwindow</code> (<strong>c</strong>) and <code>storagewindow</code> (<strong>s</strong>) buttons.</li>
+  </ul>
+
+  <h3>Live Multitrack Recording</h3>
+  <p>
+    A dedicated <code>[mc.sfrecord~ 8 @bitdepth 24]</code> records up to 8 channels of the spatial field simultaneously:
+  </p>
+  <ul style="padding-left: 24px; margin-bottom: 16px;">
+    <li>Click <code>open</code> to designate target soundfile folder and file name.</li>
+    <li>Live timer counter formatted in <code>hh:mm:ss.ms</code>.</li>
+    <li>Automatic file closure on patcher termination via <code>closebang</code> to prevent corrupted takes.</li>
+  </ul>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>
+
+<!-- CHAPTER 16: PARAMETER REFERENCE -->
+<section class="chapter" id="ch-parameter-ref">
+  <div class="chapter-header">
+    <span class="chapter-number">Chapter 16</span>
+    <h2>Complete Parameter &amp; Message Reference</h2>
+  </div>
+
+  <p class="lead-sub">Alphabetical reference of all Max messages accepted by the master engine, matrix, and DSP modules.</p>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Message Header</th>
+          <th>Arguments</th>
+          <th>Default</th>
+          <th>Destination Object</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>ampMin</code>, <code>ampMax</code></td>
+          <td><code>float (dB)</code></td>
+          <td><code>-18.0, -3.0</code></td>
+          <td><code>master_engine.js</code></td>
+          <td>Decibel amplitude boundary range ($-90 \dots +24\text{ dB}$).</td>
+        </tr>
+        <tr>
+          <td><code>ampDur</code></td>
+          <td><code>float (ms)</code></td>
+          <td><code>0.0</code></td>
+          <td><code>master_engine.js</code></td>
+          <td>Non-linear amplitude interpolation ramp time.</td>
+        </tr>
+        <tr>
+          <td><code>arpeggio-interval</code></td>
+          <td><code>float (ms)</code></td>
+          <td><code>200.0</code></td>
+          <td><code>stochastic-cloud.gen</code></td>
+          <td>Base temporal spacing between stochastic cloud bursts.</td>
+        </tr>
+        <tr>
+          <td><code>arpeggio-jitter</code></td>
+          <td><code>float (%)</code></td>
+          <td><code>80.0</code></td>
+          <td><code>stochastic-cloud.gen</code></td>
+          <td>Timing randomization intensity ($0 \dots 100\%$).</td>
+        </tr>
+        <tr>
+          <td><code>arpeggio-occurences</code></td>
+          <td><code>int</code></td>
+          <td><code>8</code></td>
+          <td><code>stochastic-cloud.gen</code></td>
+          <td>Number of successive bursts in an arpeggio sequence.</td>
+        </tr>
+        <tr>
+          <td><code>chans</code></td>
+          <td><code>int</code></td>
+          <td><code>6</code></td>
+          <td><code>matrix_32x64.js</code></td>
+          <td>Number of active loudspeaker channels; locks excess matrix columns.</td>
+        </tr>
+        <tr>
+          <td><code>diagonal</code> / <code>diag</code></td>
+          <td><code>none</code></td>
+          <td>&mdash;</td>
+          <td><code>matrix_32x64.js</code></td>
+          <td>Patches straight 1:1 connections up to active <code>chans</code> count.</td>
+        </tr>
+        <tr>
+          <td><code>fadeInPct</code>, <code>fadeOutPct</code></td>
+          <td><code>float (%)</code></td>
+          <td><code>5.0, 25.0</code></td>
+          <td><code>zigzag~</code></td>
+          <td>Attack and decay proportions relative to total compensated duration.</td>
+        </tr>
+        <tr>
+          <td><code>harmonicMode</code></td>
+          <td><code>0 | 1</code></td>
+          <td><code>0</code></td>
+          <td><code>master_engine.js</code></td>
+          <td>$0 = \text{continuous float transpo}$, $1 = \text{quantized modal scale}$.</td>
+        </tr>
+        <tr>
+          <td><code>is3D</code></td>
+          <td><code>0 | 1</code></td>
+          <td><code>0</code></td>
+          <td><code>master_engine.js</code></td>
+          <td>$0 = \text{horizontal median plane (Z=0.5)}$, $1 = \text{full 3D elevation (Z in 0..1)}$.</td>
+        </tr>
+        <tr>
+          <td><code>mode</code></td>
+          <td><code>0 | 1 | 2</code></td>
+          <td><code>0</code></td>
+          <td><code>master_engine.js</code></td>
+          <td>$0 = \text{Straight}$, $1 = \text{Varispeed/Ramp}$, $2 = \text{Curve BPF}$.</td>
+        </tr>
+        <tr>
+          <td><code>panic</code></td>
+          <td><code>none</code></td>
+          <td>&mdash;</td>
+          <td><code>master_engine.js</code></td>
+          <td>Triggers selective fade-out of currently active running voices.</td>
+        </tr>
+        <tr>
+          <td><code>playMode</code></td>
+          <td><code>0 | 1</code></td>
+          <td><code>0</code></td>
+          <td><code>master_engine.js</code></td>
+          <td>$0 = \text{Round-Robin (Urn Random)}$, $1 = \text{Sequential Forward Loop}$.</td>
+        </tr>
+        <tr>
+          <td><code>spat-curve</code></td>
+          <td><code>float</code></td>
+          <td><code>3.0</code></td>
+          <td><code>whiplash.gendsp</code></td>
+          <td>Ballistic trajectory ease-in curvature ($1.0 = \text{linear}, 3.0 = \text{snap}$).</td>
+        </tr>
+        <tr>
+          <td><code>spat-damp</code></td>
+          <td><code>float (0..1)</code></td>
+          <td><code>0.65</code></td>
+          <td><code>adm_panner.gendsp</code></td>
+          <td>Atmospheric air absorption damping based on radial distance.</td>
+        </tr>
+        <tr>
+          <td><code>spat-sharp</code></td>
+          <td><code>float (1..8)</code></td>
+          <td><code>2.5</code></td>
+          <td><code>adm_panner.gendsp</code></td>
+          <td>Cosine beam sharpness exponent for focused sound localization.</td>
+        </tr>
+        <tr>
+          <td><code>spat-smooth</code></td>
+          <td><code>int (samps)</code></td>
+          <td><code>240</code></td>
+          <td><code>adm_panner.gendsp</code></td>
+          <td>Spatial coordinate slewing to prevent clicks without losing impact.</td>
+        </tr>
+        <tr>
+          <td><code>spat-width</code></td>
+          <td><code>float (%)</code></td>
+          <td><code>100.0</code></td>
+          <td><code>adm_panner.gendsp</code></td>
+          <td>Angular beam aperture width ($100\% = \text{standard}, 200\% = \text{wide}$).</td>
+        </tr>
+        <tr>
+          <td><code>spatDur</code></td>
+          <td><code>float (ms)</code></td>
+          <td><code>1000.0</code></td>
+          <td><code>master_engine.js</code></td>
+          <td>Total spatial interpolation trajectory travel time.</td>
+        </tr>
+        <tr>
+          <td><code>stopDur</code></td>
+          <td><code>float (ms)</code></td>
+          <td><code>100.0</code></td>
+          <td><code>master_engine.js</code></td>
+          <td>Fade-out time applied during selective voice panic release.</td>
+        </tr>
+        <tr>
+          <td><code>transpoMin</code>, <code>transpoMax</code></td>
+          <td><code>float</code></td>
+          <td><code>0.8, 1.2</code></td>
+          <td><code>master_engine.js</code></td>
+          <td>Transposition speed boundaries (or integer octave bounds in modal mode).</td>
+        </tr>
+        <tr>
+          <td><code>transpoDur</code></td>
+          <td><code>float (ms)</code></td>
+          <td><code>150.0</code></td>
+          <td><code>master_engine.js</code></td>
+          <td>Transposition speed ramp duration.</td>
+        </tr>
+        <tr>
+          <td><code>/clearsources</code></td>
+          <td><code>none</code></td>
+          <td>&mdash;</td>
+          <td><code>3D WebGL Monitor</code></td>
+          <td>OSC command purging hung or remaining visual sources in the 3D viewer.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <a href="#top" class="back-to-menu-link">&uarr; Back to Top / Menu</a>
+</section>

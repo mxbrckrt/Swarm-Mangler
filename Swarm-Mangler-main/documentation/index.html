@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swarm-Mangler — Documentation & Manuel Utilisateur</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-lang="fr">
+
+  <!-- =========================================================================
+       SIDEBAR NAVIGATION
+       ========================================================================= -->
+  <aside id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-header-row">
+        <h1>Swarm-Mangler <span class="badge">v9.2</span></h1>
+        <div class="lang-toggle-container">
+          <button id="btn-lang-fr" class="lang-btn active" title="Version Française">FR</button>
+          <button id="btn-lang-en" class="lang-btn" title="English Version">EN</button>
+        </div>
+      </div>
+      <p class="lang-en">Polyphonic Spatial Granulator &amp; Diffusion Engine</p>
+      <p class="lang-fr">Granulateur Spatial Polyphonique &amp; Moteur de Diffusion</p>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" id="nav-search-input" placeholder="Search / Rechercher..." aria-label="Search">
+    </div>
+
+    <nav class="nav-menu">
+      <!-- ESSENTIAL SETUP -->
+      <div class="nav-group">
+        <div class="nav-group-title">
+          <span class="lang-en">&#x26A0;&#xFE0F; Essential Setup</span>
+          <span class="lang-fr">&#x26A0;&#xFE0F; Configuration Requise</span>
+        </div>
+        <ul>
+          <li class="nav-item">
+            <a href="#ch-soundcard" style="color: var(--accent-gold); font-weight: 700;">
+              <span class="lang-en">1. Sound Card &amp; Headphone Mode</span>
+              <span class="lang-fr">1. Carte Son &amp; Écoute Casque</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-compatibility">
+              <span class="lang-en">2. Vanilla Native &amp; Max 8/9 Setup</span>
+              <span class="lang-fr">2. Max Vanilla &amp; Compatibilité 8/9</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-recording" style="color: var(--accent-red); font-weight: 600;">
+              <span class="lang-en">3. Live Multitrack Recording</span>
+              <span class="lang-fr">3. Enregistrement Multipiste</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-presets" style="color: var(--accent-gold); font-weight: 600;">
+              <span class="lang-en">4. Presets &amp; Auto JSON Save</span>
+              <span class="lang-fr">4. Gestion Presets &amp; JSON</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- SYSTEM & SYNTHESIS -->
+      <div class="nav-group">
+        <div class="nav-group-title">
+          <span class="lang-en">System &amp; Synthesis</span>
+          <span class="lang-fr">Système &amp; Synthèse</span>
+        </div>
+        <ul>
+          <li class="nav-item">
+            <a href="#ch-quickstart">
+              <span class="lang-en">5. Quick Start Tutorial</span>
+              <span class="lang-fr">5. Prise en Main Rapide</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-architecture">
+              <span class="lang-en">6. Architecture &amp; Signal Flow</span>
+              <span class="lang-fr">6. Architecture &amp; Flux Signal</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-polybuffer">
+              <span class="lang-en">7. Polybuffer &amp; File Pool</span>
+              <span class="lang-fr">7. Polybuffer &amp; Fichiers</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-playback-modes">
+              <span class="lang-en">8. Playback &amp; Pitch Modes</span>
+              <span class="lang-fr">8. Modes de Lecture &amp; Pitch</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-harmonic-scales">
+              <span class="lang-en">9. Harmonic Modal Quantizer</span>
+              <span class="lang-fr">9. Quantificateur Harmonique</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-function-bpf">
+              <span class="lang-en">10. Curve Envelope (BPF)</span>
+              <span class="lang-fr">10. Enveloppe de Courbe (BPF)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-triggers">
+              <span class="lang-en">11. Triggers &amp; Stochastic Cloud</span>
+              <span class="lang-fr">11. Déclencheurs &amp; Nuage</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- SPATIALIZATION & MONITORING -->
+      <div class="nav-group">
+        <div class="nav-group-title">
+          <span class="lang-en">Spatialization &amp; 3D</span>
+          <span class="lang-fr">Spatialisation &amp; 3D</span>
+        </div>
+        <ul>
+          <li class="nav-item">
+            <a href="#ch-spatialization">
+              <span class="lang-en">12. ADM Spatializer</span>
+              <span class="lang-fr">12. Spatialiseur ADM</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-webgl-viewer" style="color: var(--accent-cyan); font-weight: 700;">
+              <span class="lang-en">13. 3D WebGL Monitor &amp; Layouts</span>
+              <span class="lang-fr">13. Visualiseur 3D &amp; Layouts CSV</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-telemetry-osc">
+              <span class="lang-en">14. 3D OSC Telemetry Stream</span>
+              <span class="lang-fr">14. Télémétrie 3D OSC</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-matrix-routing">
+              <span class="lang-en">15. 32&times;64 Paged Matrix &amp; Diag</span>
+              <span class="lang-fr">15. Matrice 32&times;64 &amp; Diagonal</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-multichannel-reverb">
+              <span class="lang-en">16. Multichannel FDN Reverb</span>
+              <span class="lang-fr">16. Réverbération FDN MC</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- PERFORMANCE & OPERATION -->
+      <div class="nav-group">
+        <div class="nav-group-title">
+          <span class="lang-en">Control &amp; Operations</span>
+          <span class="lang-fr">Contrôle &amp; Exploitation</span>
+        </div>
+        <ul>
+          <li class="nav-item">
+            <a href="#ch-external-control">
+              <span class="lang-en">17. MIDI &amp; External Integration</span>
+              <span class="lang-fr">17. Contrôle MIDI &amp; Intégration</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-monitoring">
+              <span class="lang-en">18. Visual Voice Monitor</span>
+              <span class="lang-fr">18. Moniteur Visuel des Voix</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-panic">
+              <span class="lang-en">19. Selective Voice Panic</span>
+              <span class="lang-fr">19. Panic Sélectif des Voix</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#ch-parameter-ref">
+              <span class="lang-en">20. Parameter Reference</span>
+              <span class="lang-fr">20. Tableau des Paramètres</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="nav-footer">
+      &copy; 2026 Max Bruckert &bull; Max 8 &amp; 9
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       MAIN CONTENT
+       ========================================================================= -->
+  <main id="content">
+
+    <!-- HERO HEADER -->
+    <header class="hero" id="top">
+      <div class="hero-tagline">
+        <span class="lang-en">Polyphonic Multichannel Instrument</span>
+        <span class="lang-fr">Instrument Polyphonique Multicanale</span>
+      </div>
+      <h1>Swarm-Mangler</h1>
+      
+      <p class="lead lang-en">
+        A 32-voice polyphonic player, integrated spatializer, real-time 3D WebGL monitor, and multichannel matrix (up to 64 outputs) designed for electroacoustic composition and multi-loudspeaker arrays. Includes ADM-compliant OSC telemetry for seamless integration with external spatial renderers. 
+      </p>
+      <p class="lead lang-fr">
+        Lecteur polyphonique 32 voix, spatialiseur intégré, visualiseur 3D WebGL temps réel et matrice de diffusion (jusqu'à 64 sorties) conçus pour la création électroacoustique et les dispositifs multicanaux. Télémétrie OSC au format ADM pour compatibilité directe avec les spatialisateurs externes.
+      </p>
+
+      <div class="hero-meta">
+        <div class="meta-pill highlight-gold"><strong>Auteur / Author:</strong> Max Bruckert (2026)</div>
+        <div class="meta-pill highlight-cyan"><strong>Moteur / Engine:</strong> 32 Voix Parallèles (Parallel Voices)</div>
+        <div class="meta-pill"><strong>Audio I/O:</strong> 32 Ins &times; 64 Dante Outs</div>
+        <div class="meta-pill"><strong>Vanilla Native:</strong> 100% Native Max (MC + Gen)</div>
+      </div>
+    </header>
+
+    <!-- CHAPTER 1: SOUNDCARD SETUP & HEADPHONE/STEREO MODE -->
+    <section class="chapter" id="ch-soundcard">
+      <div class="chapter-header">
+        <span class="chapter-number essential">
+          <span class="lang-en">Chapter 01 &bull; Essential Setup for Novices</span>
+          <span class="lang-fr">Chapitre 01 &bull; Étape Initiale Indispensable (Débutants)</span>
+        </span>
+        <h2>
+          <span class="lang-en">Sound Card Setup &amp; Headphone/Stereo Mode ("edit card")</span>
+          <span class="lang-fr">Configuration Carte Son &amp; Écoute Casque/Stéréo ("edit card")</span>
+        </h2>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-title">&#x1F50A; <span class="lang-en">First Step Before Anything Else</span><span class="lang-fr">À faire impérativement avant toute utilisation</span></div>
+        <p class="lang-en">
+          Before triggering sounds or loading files, you must configure your audio interface. If the sound card is not properly routed or if the DSP engine is off, Swarm-Mangler will remain completely silent. Once your card is configured, make sure to turn the audio engine back on by clicking the speaker icon (it must illuminate in green).
+        </p>
+        <p class="lang-fr">
+          Avant de lancer des fichiers ou de jouer des sons, vous devez obligatoirement sélectionner votre carte son. Si la carte n'est pas assignée ou si le moteur audio DSP est éteint, Swarm-Mangler ne produira aucun son. Après avoir configuré votre carte, veillez à rallumer le moteur audio en cliquant sur l'icône de haut-parleur (elle doit être allumée en vert).
+        </p>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">&#x1F3A7; <span class="lang-en">No Multichannel Speaker Ring? Headphone &amp; Stereo Ready!</span><span class="lang-fr">Pas de couronne multicanale ? Écoute au casque &amp; stéréo immédiate !</span></div>
+        <p class="lang-en">
+          You do <strong>not</strong> need a 16-channel array or a multichannel sound card to enjoy Swarm-Mangler. To test or compose on a computer:
+          <br>&bull; Set <code>n&deg; of channels</code> to <code>2</code> in the main header.
+          <br>&bull; Open <code>output matrix patch</code> and click <code>diagonal</code>. Sources 1 and 2 are routed directly to outputs 1 (Left) and 2 (Right).
+          <br>&bull; The  spatializer and FDN reverb adapt smoothly to a standard stereo or binaural headphone experience.
+        </p>
+        <p class="lang-fr">
+          Vous n'avez <strong>pas besoin</strong> d'une couronne de 16 enceintes ni d'une carte réseau multicanale pour faire tourner Swarm-Mangler. Pour travailler sur votre ordinateur  au casque :
+          <br>&bull; Réglez <code>n&deg; of channels</code> sur <code>2</code> dans l'entête principal.
+          <br>&bull; Ouvrez <code>output matrix patch</code> et cliquez sur <code>diagonal</code>. Les sources sont assignées directement sur les canaux 1 (Gauche) et 2 (Droite).
+          <br>&bull; Le spatialiseur balistique et la réverbération FDN s'adaptent instantanément pour une écoute stéréo ou au casque.
+        </p>
+      </div>
+
+      <p class="lang-en">
+        In the main patch header (right next to the circular green Audio Engine button), click the <strong>"edit card"</strong> button. This opens the native <strong>Max Audio Status</strong> window.
+      </p>
+      <p class="lang-fr">
+        Dans l'entête du patch principal (juste à côté du gros bouton circulaire de mise en route audio), cliquez sur le bouton <strong>"edit card"</strong>. Cela ouvre directement la fenêtre native de configuration <strong>Audio Status (DSP Status)</strong> de Max.
+      </p>
+
+      <div class="card-grid">
+        <div class="card highlight-gold">
+          <div class="card-icon">&#x1F4BE;</div>
+          <h4><span class="lang-en">1. Driver Selection</span><span class="lang-fr">1. Pilote Audio (Driver)</span></h4>
+          <p class="lang-en">
+            &bull; <strong>macOS:</strong> Choose <code>CoreAudio</code>.<br>
+            &bull; <strong>Windows:</strong> Choose <code>ASIO</code> (or Dante PCIe / Virtual Soundcard ASIO).<br>
+            &bull; For virtual routing: choose <code>BlackHole</code>, <code>Loopback</code>, or <code>Dante Virtual Soundcard</code>.
+          </p>
+          <p class="lang-fr">
+            &bull; <strong>macOS :</strong> Sélectionnez <code>CoreAudio</code>.<br>
+            &bull; <strong>Windows :</strong> Sélectionnez <code>ASIO</code>.<br>
+            &bull; Pour le routing virtuel : choisissez <code>BlackHole</code>, <code>Loopback</code>, ou <code>Dante Virtual Soundcard</code>.
+          </p>
+        </div>
+
+        <div class="card highlight-cyan">
+          <div class="card-icon">&#x1F50C;</div>
+          <h4><span class="lang-en">2. Input &amp; Output Device</span><span class="lang-fr">2. Périphérique de Sortie</span></h4>
+          <p class="lang-en">
+            Select your physical sound interface (e.g. <em>RME, MOTU, Universal Audio, Focusrite, MacBook Speakers/Headphones</em>, or <em>Dante</em>) as the <strong>Output Device</strong>.
+          </p>
+          <p class="lang-fr">
+            Choisissez votre interface physique (ex. <em>RME, MOTU, Universal Audio, Focusrite, Casque/Haut-parleurs intégrés</em>, ou <em>Dante</em>) dans le menu déroulant <strong>Output Device</strong>.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">&#x2699;&#xFE0F;</div>
+          <h4><span class="lang-en">3. Sample Rate &amp; Buffer Size</span><span class="lang-fr">3. Fréquence &amp; Taille de Buffer</span></h4>
+          <p class="lang-en">
+            &bull; <strong>Sampling Rate:</strong> Set to <code>48000 Hz</code> (standard for spatial audio and Dante) or <code>44100 Hz</code>.<br>
+            &bull; <strong>I/O Vector Size:</strong> <code>128</code> or <code>256</code> samples for low latency; <code>512</code> if running heavy polyphony.
+          </p>
+          <p class="lang-fr">
+            &bull; <strong>Fréquence d'échantillonnage :</strong> Réglez sur <code>48000 Hz</code> (recommandé en spatialisation et Dante) ou <code>44100 Hz</code>.<br>
+            &bull; <strong>Taille de buffer (I/O Vector Size) :</strong> <code>128</code> ou <code>256</code> pour faible latence ; <code>512</code> en forte charge polyphonique.
+          </p>
+        </div>
+
+        <div class="card highlight-cyan">
+          <div class="card-icon">&#x26A1;</div>
+          <h4><span class="lang-en">4. Turn ON the Audio Engine</span><span class="lang-fr">4. Allumer le Moteur Audio</span></h4>
+          <p class="lang-en">
+            Close the status window and click the round <strong>ezdac~</strong> button. When illuminated in <strong>green</strong>, audio DSP is active and ready to output sound.
+          </p>
+          <p class="lang-fr">
+            Fermez la fenêtre et cliquez sur le gros bouton rond <strong>ezdac~</strong>. Lorsqu'il est allumé en <strong>vert</strong>, le moteur DSP est actif et prêt à diffuser.
+          </p>
+        </div>
+      </div>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 2: VANILLA COMPATIBILITY & MAX 8/9 -->
+    <section class="chapter" id="ch-compatibility">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 02 &bull; Environment</span>
+          <span class="lang-fr">Chapitre 02 &bull; Environnement</span>
+        </span>
+        <h2>
+          <span class="lang-en">100% Native Vanilla Max (Zero External Packages) &amp; Theme Setup</span>
+          <span class="lang-fr">100% Natif Max Vanilla (Zéro Package Externe) &amp; Thème Sombre</span>
+        </h2>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">&#x2714;&#xFE0F; <span class="lang-en">Zero Third-Party Dependencies</span><span class="lang-fr">Zéro Dépendance Externe Requise</span></div>
+        <p class="lang-en">
+          Swarm-Mangler is built strictly with <strong>Native Vanilla Max 8 &amp; 9 components</strong>: standard Multichannel (<code>mc.*</code>), GenExpr (<code>gen~</code>, <code>mc.gen~</code>), polyphony managers (<code>mcs.poly~</code>), and internal JavaScript engines.
+          <br><strong>No third-party externals, no Max Package Manager downloads, and no compiled C externals are required.</strong>
+        </p>
+        <p class="lang-fr">
+          Swarm-Mangler est conçu exclusivement avec les <strong>composants natifs officiels de Cycling '74 Max 8 et 9</strong> : objets Multicanaux (<code>mc.*</code>), compilation GenExpr (<code>gen~</code>, <code>mc.gen~</code>), gestionnaire de polyphonie (<code>mcs.poly~</code>) et JavaScript intégré.
+          <br><strong>Aucun package externe tiers, aucune extension externe C compilée n'est requise.</strong> Tout s'exécute immédiatement dès le téléchargement.
+        </p>
+      </div>
+
+      <h3>
+        <span class="lang-en">Crucial Visual Setting for Max 8 Users</span>
+        <span class="lang-fr">Réglage Visuel Crucial pour les Utilisateurs de Max 8</span>
+      </h3>
+      <p class="lang-en">
+        Max 9 introduced native support for <strong>Ableton Live 12 dynamic color palettes</strong>, adapting UI elements dynamically.
+        <br><strong>Max 8 does not possess these dynamic color tokens.</strong> Because Swarm-Mangler's custom interface elements, labels, and matrices are designed with a deep nocturnal palette, running Max 8 with a default "Light Theme" will cause white text labels to blend into white backgrounds.
+      </p>
+      <p class="lang-fr">
+        Max 9 a introduit la prise en charge des <strong>palettes de couleurs dynamiques d'Ableton Live 12</strong>, adaptant automatiquement les contrastes de texte et de fond.
+        <br><strong>Max 8 ne possède pas ces correspondances de couleurs dynamiques.</strong> Comme la charte graphique de Swarm-Mangler est pensée pour un fond sombre, ouvrir le patch dans Max 8 avec le thème clair par défaut rendrait certains textes et étiquettes peu lisibles.
+      </p>
+
+      <div class="callout warning">
+        <div class="callout-title">&#x1F311; <span class="lang-en">Action Required in Max 8</span><span class="lang-fr">Action Requise dans Max 8</span></div>
+        <p class="lang-en">
+          In Max 8, navigate to <strong>Max &rarr; Preferences &rarr; Colors</strong> and set the global theme to <strong>Dark</strong>. This immediately restores complete visual contrast and gives the exact identical appearance as in Max 9.
+        </p>
+        <p class="lang-fr">
+          Dans Max 8, allez dans <strong>Max &rarr; Preferences &rarr; Colors</strong> et appliquez le thème <strong>Dark</strong> (Sombre). Cela garantit immédiatement un contraste parfait et un rendu graphique strictement identique à Max 9.
+        </p>
+      </div>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 3: LIVE MULTITRACK RECORDING -->
+    <section class="chapter" id="ch-recording">
+      <div class="chapter-header">
+        <span class="chapter-number essential">
+          <span class="lang-en">Chapter 03 &bull; Recording</span>
+          <span class="lang-fr">Chapitre 03 &bull; Enregistrement</span>
+        </span>
+        <h2>
+          <span class="lang-en">Live Multitrack Audio Recording (Capturing Everything Live)</span>
+          <span class="lang-fr">Enregistrement Multipiste en Direct (Capture Complète du Jeu)</span>
+        </h2>
+      </div>
+
+      <p class="lead-sub lang-en">
+        Capture everything exiting the patch in real time across up to 8 channels in pristine 24-bit uncompressed WAV.
+      </p>
+      <p class="lead-sub lang-fr">
+        Capturez l'intégralité de ce qui sort du programme en temps réel pendant le jeu, jusqu'à 8 canaux en WAV 24-bit non compressé.
+      </p>
+
+      <p class="lang-en">
+        Swarm-Mangler embeds a dedicated multichannel disk recording engine powered by <code>[mc.sfrecord~ 8 @bitdepth 24]</code>:
+      </p>
+      <p class="lang-fr">
+        Swarm-Mangler intègre un moteur d'enregistrement direct sur disque basé sur <code>[mc.sfrecord~ 8 @bitdepth 24]</code> :
+      </p>
+
+      <ul>
+        <li>
+          <span class="lang-en"><strong>Choose where you want your soundfile to be written:</strong> Click the <code>open</code> button to select your destination directory and name your audio take.</span>
+          <span class="lang-fr"><strong>Choix du fichier de destination :</strong> Cliquez sur <code>open</code> pour choisir l'emplacement sur votre disque et nommer votre prise.</span>
+        </li>
+        <li>
+          <span class="lang-en"><strong>Automatic Channel Count:</strong> The recorder automatically listens to <code>n&deg; of channels</code> and adapts its recording tracks (from 1 up to 8 channels).</span>
+          <span class="lang-fr"><strong>Adaptation automatique du nombre de canaux :</strong> L'enregistreur s'adapte automatiquement au nombre de canaux actif (de 1 à 8 canaux).</span>
+        </li>
+        <li>
+          <span class="lang-en"><strong>Total Live Capture:</strong> Everything that sounds—polyphonic grain swarms, kinetic panning trajectories, FDN reverberation, and master volume moves—is captured in real time.</span>
+          <span class="lang-fr"><strong>Capture totale en direct :</strong> Tout ce qui sonne pendant votre jeu (essaims de grains, trajectoires spatiales, réverbération FDN, nuances de gain) est capturé en direct.</span>
+        </li>
+        <li>
+          <span class="lang-en"><strong>Live Elapsed Timer:</strong> A realtime clock shows <code>00:00:00.000</code> (hours, minutes, seconds, milliseconds) while recording.</span>
+          <span class="lang-fr"><strong>Chronomètre temps réel :</strong> Un compteur affiche la durée exacte enregistrée sous la forme <code>00:00:00.000</code>.</span>
+        </li>
+      </ul>
+
+      <div class="callout danger">
+        <div class="callout-title">&#x1F6A8; <span class="lang-en">CRITICAL CAUTION: Remember to Turn OFF When Finished!</span><span class="lang-fr">ATTENTION IMPORTANT : Pensez à Éteindre l'Enregistrement !</span></div>
+        <p class="lang-en">
+          <strong>Do not forget to click the record toggle OFF as soon as your take is finished!</strong>
+          <br>If left active, <code>[mc.sfrecord~]</code> will continuously write uncompressed 24-bit audio to your hard drive in the background, consuming hundreds of megabytes per minute. Moreover, quitting Max while recording without stopping can corrupt the file header.
+        </p>
+        <p class="lang-fr">
+          <strong>Pensez impérativement à désactiver le bouton d'enregistrement (toggle sur 0) une fois votre session terminée !</strong>
+          <br>Si vous le laissez allumé, <code>[mc.sfrecord~]</code> continuera d'écrire des gigaoctets de données en arrière-plan et saturera votre disque dur. De plus, fermer Max brutalement sans avoir éteint l'enregistreur risque d'endommager l'entête du fichier audio.
+        </p>
+      </div>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 4: PRESETS & AUTO JSON SAVE -->
+    <section class="chapter" id="ch-presets">
+      <div class="chapter-header">
+        <span class="chapter-number essential">
+          <span class="lang-en">Chapter 04 &bull; Presets</span>
+          <span class="lang-fr">Chapitre 04 &bull; Gestion des Presets</span>
+        </span>
+        <h2>
+          <span class="lang-en">Preset Management &amp; Automatic JSON File Saving</span>
+          <span class="lang-fr">Gestion des Presets &amp; Enregistrement Automatique JSON</span>
+        </h2>
+      </div>
+
+      <p class="lead-sub lang-en">
+        Total recall of all synthesis parameters, matrix cross-points, and spatial acoustics with instant automatic disk persistence.
+      </p>
+      <p class="lead-sub lang-fr">
+        Rappel intégral instantané de la synthèse, des points de matrice et de la réverbération avec sauvegarde automatique sur disque.
+      </p>
+
+      <div class="card-grid">
+        <div class="card highlight-gold">
+          <h4><span class="lang-en">Recalling a Preset</span><span class="lang-fr">Rappeler un Preset</span></h4>
+          <p class="lang-en">
+            Click on any preset button. All sound parameters, envelope percentages, panner sharpness, and routing connections in the 32&times;64 matrix are restored instantly.
+          </p>
+          <p class="lang-fr">
+            Cliquez sur un numéro de preset dans la grille. Tous les paramètres de synthèse, réglages d'enveloppe, diffusion spatiale et points de routage de la matrice 32&times;64 se mettent à jour instantanément.
+          </p>
+        </div>
+
+        <div class="card highlight-cyan">
+          <h4><span class="lang-en">Storing / Modifying a Preset</span><span class="lang-fr">Enregistrer un Preset</span></h4>
+          <p class="lang-en">
+            To overwrite or store the current settings into a preset slot, <strong>Shift-click</strong> on the desired preset square, or use the <code>store &lt;id&gt;</code> message.
+          </p>
+          <p class="lang-fr">
+            Pour sauvegarder vos réglages actuels dans un emplacement, faites <strong>Shift-clic</strong> sur la case du preset souhaité, ou envoyez un message <code>store &lt;id&gt;</code>.
+          </p>
+        </div>
+
+        <div class="card highlight-gold">
+          <h4><span class="lang-en">Automatic JSON Persistence (@savemode 2)</span><span class="lang-fr">Enregistrement Automatique JSON (@savemode 2)</span></h4>
+          <p class="lang-en">
+            Thanks to <code>@savemode 2</code>, you do <strong>not</strong> need to manually save a file: whenever a preset is stored or updated, Max <strong>automatically writes the state to <code>data/mangler.json</code> on disk</strong> immediately.
+          </p>
+          <p class="lang-fr">
+            Grâce à l'attribut <code>@savemode 2</code>, vous n'avez <strong>pas besoin d'enregistrer manuellement</strong> : dès que vous mémorisez un preset, Max <strong>écrit automatiquement les données dans le fichier <code>data/mangler.json</code> sur votre disque</strong>.
+          </p>
+        </div>
+
+        <div class="card">
+          <h4><span class="lang-en">Inspection Buttons (c, s, w)</span><span class="lang-fr">Boutons d'Inspection (c, s, w)</span></h4>
+          <p class="lang-en">
+            &bull; <kbd>c</kbd> : Opens the <strong>Client Window</strong> (shows all mapped pattr parameters).<br>
+            &bull; <kbd>s</kbd> : Opens the <strong>Storage Window</strong> (view and interpolate slots).<br>
+            &bull; <kbd>w</kbd> : Force manual <strong>Write</strong> to disk.
+          </p>
+          <p class="lang-fr">
+            &bull; <kbd>c</kbd> : Ouvre la <strong>Client Window</strong> (liste de tous les paramètres pattr).<br>
+            &bull; <kbd>s</kbd> : Ouvre la <strong>Storage Window</strong> (tableau de tous les presets et interpolation).<br>
+            &bull; <kbd>w</kbd> : Force l'écriture manuelle (<strong>Write</strong>) sur disque.
+          </p>
+        </div>
+      </div>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 5: QUICK START -->
+    <section class="chapter" id="ch-quickstart">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 05 &bull; Workflow</span>
+          <span class="lang-fr">Chapitre 05 &bull; Prise en Main Rapide</span>
+        </span>
+        <h2>
+          <span class="lang-en">Quick Start Tutorial (5 Steps)</span>
+          <span class="lang-fr">Tutoriel Rapide en 5 Étapes</span>
+        </h2>
+      </div>
+
+      <ol>
+        <li>
+          <span class="lang-en"><strong>Load Soundfiles:</strong> In the <code>-polybuffer-</code> section, drag a folder of audio files (WAV, AIFF, FLAC) from Finder onto the drop zone.</span>
+          <span class="lang-fr"><strong>Charger vos fichiers audio :</strong> Dans la section <code>-polybuffer-</code>, glissez-déposez un dossier de sons (WAV, AIFF, FLAC) depuis le Finder sur la zone prévue.</span>
+        </li>
+        <li>
+          <span class="lang-en"><strong>Set Channels:</strong> Set <code>n&deg; of channels</code> (e.g. <code>2</code> for stereo/headphones, <code>8</code> for an octophonic ring).</span>
+          <span class="lang-fr"><strong>Régler le nombre de canaux :</strong> Ajustez <code>n&deg; of channels</code> (ex. <code>2</code> pour stéréo/casque, <code>8</code> pour une couronne à 8 enceintes).</span>
+        </li>
+        <li>
+          <span class="lang-en"><strong>Patch Matrix:</strong> Click <code>output matrix patch</code> and click <code>diagonal</code> for a direct 1:1 assignment.</span>
+          <span class="lang-fr"><strong>Connecter la matrice :</strong> Ouvrez <code>output matrix patch</code> et cliquez sur <code>diagonal</code> pour une liaison directe 1:1.</span>
+        </li>
+        <li>
+          <span class="lang-en"><strong>Set Pitch Mode:</strong> Turn <code>Varispeed ON</code>, set glissandi duration to <code>400 ms</code>, and choose a scale in <code>Harmony</code>.</span>
+          <span class="lang-fr"><strong>Régler le mode de pitch :</strong> Activez <code>Varispeed ON</code>, réglez la durée de glissando à <code>400 ms</code> et choisissez une gamme dans <code>Harmony</code>.</span>
+        </li>
+        <li>
+          <span class="lang-en"><strong>Launch Swarm:</strong> Click <code>start arpeggio</code> to hear the kinetic spatial swarm disperse across your speakers!</span>
+          <span class="lang-fr"><strong>Lancer l'essaim :</strong> Cliquez sur <code>start arpeggio</code> pour entendre le nuage cinétique se disperser dans l'espace !</span>
+        </li>
+      </ol>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 6: ARCHITECTURE -->
+    <section class="chapter" id="ch-architecture">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 06 &bull; Architecture</span>
+          <span class="lang-fr">Chapitre 06 &bull; Architecture Interne</span>
+        </span>
+        <h2>
+          <span class="lang-en">System Topology &amp; Signal Flow</span>
+          <span class="lang-fr">Topologie du Système &amp; Flux de Signal</span>
+        </h2>
+      </div>
+
+      <div class="diagram-box">
+        <pre>
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                                   SWARM-MANGLER TOPOLOGY                                │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+
+ [Folder / Finder] ──────► [polybuffer~ my-sfiles] 
+                                    │ (Shortnames, durations, chan count)
+                                    ▼
+ [Control Triggers] ────► [js master_engine.js] ◄──── [Harmony Dict / Presets]
+ (Manual / Stochastic)              │
+                                    ├──► [jsui poly_monitor.js] (Visual Telemetry)
+                                    │
+                                    ▼ (Voice Dispatch: target &lt;id&gt;, play &lt;params&gt;)
+ ┌───────────────────────────────────────────────────────────────────────────────────────┐
+ │                            [poly~ player-core 32] (Voice x)                            │
+ │                                                                                       │
+ │  [groove~ my-sfiles] ──► [Equal-Power Mono Sum] ──► [dynamic envelope: zigzag~]     │
+ │            ▲                                                    │                     │
+ │            │ (Varispeed / Wave BPF / Pitch Shift)               ▼                     │
+ │  [Trajectory Generator: 3x gen~ whiplash] ──────────► [mc.gen~ adm_panner @chans 8]  │
+ │            │                                                    │                     │
+ │            ▼                                                    ▼                     │
+ │  [gen~ 3D_snapshot_sync] ──► [OSC /adm/obj/x/xyz]      (Multichannel Voice Stream)    │
+ └─────────────────────────────────────────────────────────────────┬─────────────────────┘
+                                                                   │
+                                                                   ▼
+                                                 [mc.send~ polyplayer-out]
+                                                                   │
+                                                                   ▼
+                                                [mc.receive~ polyplayer-out @chans 48]
+                                                                   │
+                                                                   ▼
+                                              [mcs.matrix~ 32 64 @ramp 20] (matrix_32x64)
+                                                                   │
+                                      ┌────────────────────────────┴───────────────────────────┐
+                                      │                                                        │
+                                      ▼                                                        ▼
+                    [mc.gen~ fdn_multireverb.gendsp]                              [Direct Routing Bus]
+                                      │                                                        │
+                                      └────────────────────────────┬───────────────────────────┘
+                                                                   │
+                                                                   ▼
+                                                     [Master Gain: mc.*~]
+                                                                   │
+                                      ┌────────────────────────────┴───────────────────────────┐
+                                      │                                                        │
+                                      ▼                                                        ▼
+                        [mc.dac~ 1 2 3 ... 64]                           [mc.sfrecord~ 8 @24bit]
+                        (Dante / Multi-Loudspeaker)                      (Live Multitrack Take)
+        </pre>
+      </div>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 7: POLYBUFFER -->
+    <section class="chapter" id="ch-polybuffer">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 07 &bull; Audio Files</span>
+          <span class="lang-fr">Chapitre 07 &bull; Fichiers Audio</span>
+        </span>
+        <h2>
+          <span class="lang-en">Polybuffer &amp; Auto Equal-Power Mono Downmix</span>
+          <span class="lang-fr">Polybuffer &amp; Compensation Automatique Mono (-3 dB)</span>
+        </h2>
+      </div>
+
+      <p class="lang-en">
+        Swarm-Mangler automatically intercepts genuine filenames from disk via <code>shortname &lt;idx&gt; &lt;str&gt;</code> and balances stereo files by scaling them by 0.7071 (-3 dB) to match mono sounds in acoustic energy. It does not handle more than 2 multichannel soundfiles.
+      </p>
+      <p class="lang-fr">
+        Swarm-Mangler résout automatiquement les véritables noms des fichiers sur votre disque via <code>shortname &lt;idx&gt; &lt;str&gt;</code> et compense la sommation des fichiers stéréo en leur appliquant un gain de 0.7071 (-3 dB) pour qu'ils conservent exactement la même énergie acoustique que les fichiers mono. Il ne gère pas les fichiers de plus de deux canaux.
+      </p>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 8: PLAYBACK MODES -->
+    <section class="chapter" id="ch-playback-modes">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 08 &bull; Synthesis</span>
+          <span class="lang-fr">Chapitre 08 &bull; Modes de Lecture</span>
+        </span>
+        <h2>
+          <span class="lang-en">Playback Modes &amp; Integral Duration Compensation</span>
+          <span class="lang-fr">Modes de Lecture &amp; Compensation Intégrale de Durée</span>
+        </h2>
+      </div>
+
+      <p class="lang-en">
+        Three selectable playback behaviors are available:
+        <br>&bull; <strong>Mode 0 (Straight):</strong> Natural speed (1.0).
+        <br>&bull; <strong>Mode 1 (Varispeed / Random Ramp):</strong> Linear speed sweep between <code>transpoMin</code> and <code>transpoMax</code>.
+        <br>&bull; <strong>Mode 2 (Curve BPF):</strong> Speed envelope driven by <code>[wave~ pitchcurve]</code>.
+      </p>
+      <p class="lang-fr">
+        Trois modes de lecture sont sélectionnables :
+        <br>&bull; <strong>Mode 0 (Normal / Straight) :</strong> Vitesse naturelle (1.0).
+        <br>&bull; <strong>Mode 1 (Varispeed / Glissando) :</strong> Rampe de vitesse linéaire entre <code>transpoMin</code> et <code>transpoMax</code>.
+        <br>&bull; <strong>Mode 2 (Courbe BPF) :</strong> Enveloppe de vitesse pilotée par la table <code>[wave~ pitchcurve]</code>.
+      </p>
+
+      <div class="callout tip">
+        <div class="callout-title">&#x1F9EE; <span class="lang-en">Integral Duration Compensation</span><span class="lang-fr">Compensation Intégrale de Durée</span></div>
+        <p class="lang-en">
+          When pitch changes over time, buffer consumption is non-linear. The engine calculates the exact motion curve equation produced by <code>master_engine.js</code> so that the amplitude envelope (<code>zigzag~</code>) finishes <em>exactly</em> at the last sample of the soundfile, completely eliminating audio clicks.
+        </p>
+        <p class="lang-fr">
+          Lorsqu'une rampe de pitch est appliquée, le fichier audio défile à vitesse variable. Le moteur interprète la courbe produite par le script <code>master_engine.js</code> pour que l'enveloppe d'amplitude (<code>zigzag~</code>) se termine <em>exactement</em> au dernier échantillon du fichier, évitant tout clic de troncature.
+        </p>
+      </div>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 9: HARMONIC MODAL QUANTIZER -->
+    <section class="chapter" id="ch-harmonic-scales">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 09 &bull; Harmony</span>
+          <span class="lang-fr">Chapitre 09 &bull; Harmonie &amp; Gammes</span>
+        </span>
+        <h2>
+          <span class="lang-en">Harmonic Modal Quantizer (<code>harmony_presets.json</code>)</span>
+          <span class="lang-fr">Quantificateur Modal Harmonique (<code>harmony_presets.json</code>)</span>
+        </h2>
+      </div>
+
+      <p class="lang-en">
+        When <code>Rndm pitch ON</code> is active, random transpositions in Mode 1 are locked to 12-TET intervals from <code>harmony_presets.json</code> with discrete octave multipliers:
+      </p>
+      <p class="lang-fr">
+        Lorsque <code>Rndm pitch ON</code> est actif, les transpositions aléatoires du Mode 1 sont quantifiées selon les intervalles d'une gamme musicale choisie dans <code>harmony_presets.json</code> avec transposition d'octaves discrètes :
+      </p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="lang-en">Preset Name</span><span class="lang-fr">Nom du Preset</span></th>
+              <th><span class="lang-en">Context / Style</span><span class="lang-fr">Contexte / Style</span></th>
+              <th><span class="lang-en">Intervals (Semitones)</span><span class="lang-fr">Intervalles (Demi-tons)</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>risset_InharmonicBell</code></td><td>Jean-Claude Risset (Inharmonic Bell)</td><td><code>[0, 3, 7, 14, 18, 26, 33]</code></td></tr>
+            <tr><td><code>risset_ParadoxicalPitch</code></td><td>Risset Shepard Glissando</td><td><code>[0, 6, 13, 25, 38, 51]</code></td></tr>
+            <tr><td><code>messiaen_Mode2_Octatonic</code></td><td>Olivier Messiaen Mode 2</td><td><code>[1, 3, 4, 6, 7, 9, 10, 12]</code></td></tr>
+            <tr><td><code>xenakis_SieveAlpha</code></td><td>Iannis Xenakis Integer Sieve</td><td><code>[1, 4, 7, 9, 13, 16]</code></td></tr>
+            <tr><td><code>ligeti_AtmospheresCluster</code></td><td>György Ligeti Micropolyphony</td><td><code>[1, 2, 3, 4, 5, 6]</code></td></tr>
+            <tr><td><code>debussy_LydianDominant</code></td><td>Claude Debussy Lydian Dominant</td><td><code>[6, 10, 14, 18]</code></td></tr>
+            <tr><td><code>ravel_Daphnis_Maj13</code></td><td>Maurice Ravel Impressionist Stack</td><td><code>[4, 7, 11, 14, 18, 21]</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 10: CURVE BPF -->
+    <section class="chapter" id="ch-function-bpf">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 10 &bull; Modulation</span>
+          <span class="lang-fr">Chapitre 10 &bull; Modulation BPF</span>
+        </span>
+        <h2>
+          <span class="lang-en">Breakpoint Curve Envelope (<code>function_generator.js</code>)</span>
+          <span class="lang-fr">Enveloppe Graphique de Vitesse (<code>function_generator.js</code>)</span>
+        </h2>
+      </div>
+
+      <p class="lang-en">
+        Draw speed envelopes directly in the <code>[curve]</code> box or use presets:
+        <br>&bull; <code>init</code> : Linear rise (0.0 to 1.0).
+        <br>&bull; <code>dive</code> : Exponential dive-bomb (-0.8 curve).
+        <br>&bull; <code>riser</code> : Ascending tension sweep (+0.8 curve).
+        <br>&bull; <code>random</code> : Multi-point bezier curve.
+      </p>
+      <p class="lang-fr">
+        Dessinez des courbes d'évolution de vitesse directement dans <code>[curve]</code> ou chargez des formes :
+        <br>&bull; <code>init</code> : Rampe linéaire (0.0 à 1.0).
+        <br>&bull; <code>dive</code> : Chute exponentielle piquée (courbe -0.8).
+        <br>&bull; <code>riser</code> : Montée en tension exponentielle (courbe +0.8).
+        <br>&bull; <code>random</code> : Courbe aléatoire multi-points.
+      </p>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 11: TRIGGERS & CLOUD -->
+    <section class="chapter" id="ch-triggers">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 11 &bull; Kinetic Triggers</span>
+          <span class="lang-fr">Chapitre 11 &bull; Déclencheurs Cinétiques</span>
+        </span>
+        <h2>
+          <span class="lang-en">Triggers &amp; Stochastic Cloud Engine</span>
+          <span class="lang-fr">Déclencheurs &amp; Moteur de Nuage Stochastique</span>
+        </h2>
+      </div>
+
+      <p class="lang-en">
+        Trigger sounds manually via <code>trig one file</code>, or generate dense bursts using <code>stochastic-cloud.gendsp</code> with parameters: <code>interval</code> (spacing in ms), <code>jitter</code> (temporal randomization), <code>occurrences</code> (burst count), and <code>loop</code> (continuous swarm).
+      </p>
+      <p class="lang-fr">
+        Déclenchez vos sons unitairement via <code>trig one file</code>, ou générez des essaims denses grâce à <code>stochastic-cloud.gendsp</code> avec les réglages : <code>interval</code> (espacement en ms), <code>jitter</code> (désynchronisation aléatoire), <code>occurrences</code> (nombre de sons) et <code>loop</code> (bouclage infini).
+      </p>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 12: SPATIALIZATION -->
+    <section class="chapter" id="ch-spatialization">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 12 &bull; Spatial Audio</span>
+          <span class="lang-fr">Chapitre 12 &bull; Spatialisation ADM</span>
+        </span>
+        <h2>
+          <span class="lang-en">Ballistic ADM Spatializer ("THE SPAT")</span>
+          <span class="lang-fr">Spatialiseur Balistique ADM ("THE SPAT")</span>
+        </h2>
+      </div>
+
+      <p class="lang-en">
+        Combines Cartesian coordinates (X: Left/Right, Y: Back/Front, Z: Elevation) with non-linear ease-in trajectory generation (<code>whiplash.gendsp</code>, curve exponent 1.0 à 6.0) and high-contrast power-cosine beam shaping with atmospheric air damping (<code>adm_panner.gendsp</code>).
+        <br><strong>ADM 2D/3D Convention:</strong> In 2D mode (<code>is3D 0</code>), Z elevation is strictly anchored at the listener's median ear level (<strong>Z = 0.5</strong>). In 3D mode (<code>is3D 1</code>), Z traverses the full 0.0 to 1.0 volume from floor to ceiling.
+      </p>
+      <p class="lang-fr">
+        Combine des coordonnées cartésiennes ADM (X: Gauche/Droite, Y: Arrière/Avant, Z: Élévation) avec un générateur de trajectoires balistiques non-linéaires (<code>whiplash.gendsp</code>, courbure 1.0 à 6.0), un faisceau cosinus net (`sharpness`) et une absorption acoustique d'air en distance (<code>adm_panner.gendsp</code>).
+        <br><strong>Convention ADM 2D/3D :</strong> En mode 2D (<code>is3D 0</code>), l'élévation Z est strictement ancrée au plan d'écoute médian de l'auditeur (<strong>Z = 0.5</strong>). En mode 3D (<code>is3D 1</code>), Z explore tout le volume de 0.0 à 1.0 du sol au plafond.
+      </p>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 13: 3D WEBGL MONITOR & SPEAKER LAYOUTS (DEDICATED CHAPTER) -->
+    <section class="chapter" id="ch-webgl-viewer">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 13 &bull; Visualizer &amp; Layouts</span>
+          <span class="lang-fr">Chapitre 13 &bull; Moniteur 3D &amp; Layouts CSV</span>
+        </span>
+        <h2>
+          <span class="lang-en">Standalone 3D WebGL Spatial Viewer (<code>swarm_mangler_3d_spatial_viewer.html</code>)</span>
+          <span class="lang-fr">Visualiseur 3D WebGL Autonome (<code>swarm_mangler_3d_spatial_viewer.html</code>)</span>
+        </h2>
+      </div>
+
+      <p class="lead-sub lang-en">
+        Hardware-accelerated 3D room visualization with drag-and-drop loudspeaker layout parsing and real-time OSC WebSocket telemetry.
+      </p>
+      <p class="lead-sub lang-fr">
+        Visualiseur 3D temps réel accéléré par le GPU avec import par glisser-déposer de configurations d'enceintes et télémétrie WebSocket OSC.
+      </p>
+
+      <p class="lang-en">
+        Swarm-Mangler includes a standalone browser-based spatial monitor built on <strong>Three.js</strong> and <strong>Tailwind CSS</strong>. It connects in real time to Max via WebSocket on port 8080 (managed by <code>[node.script max_bridge.js]</code>) and runs smoothly even on modest graphics cards.
+      </p>
+      <p class="lang-fr">
+        Swarm-Mangler intègre un moniteur 3D autonome dans le navigateur s'appuyant sur <strong>Three.js</strong> et <strong>Tailwind CSS</strong>. Il se connecte en temps réel à Max via WebSocket sur le port 8080 (piloté par <code>[node.script max_bridge.js]</code>) et reste parfaitement fluide sur les cartes graphiques modestes.
+      </p>
+
+      <div class="card-grid">
+        <div class="card highlight-gold">
+          <div class="card-icon">&#x1F4C2;</div>
+          <h4><span class="lang-en">Loudspeaker Setup Ingestion (CSV / XLSX)</span><span class="lang-fr">Import de Layout d'Enceintes (CSV / XLSX)</span></h4>
+          <p class="lang-en">
+            Drag-and-drop your real studio or dome speaker setup file directly into the viewer's drop zone. Supports European semicolon-separated CSVs (<code>Name;X;Y;Z;A;D;E</code>) with comma decimals as well as binary Excel spreadsheets. Speaker coordinates are automatically scaled to the perimeter of the virtual room.
+          </p>
+          <p class="lang-fr">
+            Glissez-déposez directement votre fichier de configuration d'enceintes (ex. Grame ou studio perso) sur la zone de dépôt. Accepte les CSV européens à points-virgules avec virgules décimales ainsi que les fichiers Excel XLSX. Les coordonnées réelles sont automatiquement normalisées contre les parois de la pièce 3D.
+          </p>
+        </div>
+
+        <div class="card highlight-cyan">
+          <div class="card-icon">&#x1F52E;</div>
+          <h4><span class="lang-en">Amber Glass Spheres &amp; Floor Shadows</span><span class="lang-fr">Sphères en Verre Ambré &amp; Ombres Portées</span></h4>
+          <p class="lang-en">
+            Active audio voices are rendered as translucent amber glass spheres with high-contrast centered numbers. A vertical plumb stem and a radial drop shadow on the floor provide immediate depth and height perception without GPU post-processing overhead.
+          </p>
+          <p class="lang-fr">
+            Les voix actives sont représentées par des sphères translucides en verre ambré avec chiffres contrastés au centre. Un fil à plomb vertical et une ombre portée au sol permettent d'estimer instantanément la hauteur et la position sans surcharger le processeur graphique.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">&#x23F1;&#xFE0F;</div>
+          <h4><span class="lang-en">Anti-Jitter Mask (8 ms)</span><span class="lang-fr">Masque Anti-Jitter d'Apparition (8 ms)</span></h4>
+          <p class="lang-en">
+            When a new voice fires, an 8 ms visual hold-off mask ensures the sphere snaps to its genuine starting position under the hood before fading in, preventing any visual jump from stale residual trajectory coordinates.
+          </p>
+          <p class="lang-fr">
+            Lorsqu'une nouvelle voix démarre, un micro-masque de grâce de 8 ms maintient l'opacité à zéro pour caler immédiatement les coordonnées sous le capot, éliminant tout saut visuel depuis l'ancienne position résiduelle du son précédent.
+          </p>
+        </div>
+
+        <div class="card highlight-red">
+          <div class="card-icon">&#x1F9F9;</div>
+          <h4><span class="lang-en">Global Purge (/clearsources)</span><span class="lang-fr">Purge Globale (/clearsources)</span></h4>
+          <p class="lang-en">
+            Clicking the red <strong>Clear Sources</strong> button or receiving the OSC command <code>/clearsources</code> (or <code>/clear</code>) instantly extinguishes all hung voice spheres and resets the activity matrix to zero.
+          </p>
+          <p class="lang-fr">
+            Cliquer sur le bouton <strong>Clear Sources</strong> ou envoyer le message OSC <code>/clearsources</code> (ou <code>/clear</code>) éteint instantanément toutes les sphères restées suspendues et réinitialise les compteurs à zéro.
+          </p>
+        </div>
+      </div>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 14: 3D TELEMETRY OSC -->
+    <section class="chapter" id="ch-telemetry-osc">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 14 &bull; Telemetry</span>
+          <span class="lang-fr">Chapitre 14 &bull; Télémétrie OSC 3D</span>
+        </span>
+        <h2>
+          <span class="lang-en">Sample-Accurate 3D OSC Telemetry Stream</span>
+          <span class="lang-fr">Flux de Télémétrie 3D OSC Échantillon-Précis</span>
+        </h2>
+      </div>
+
+      <p class="lang-en">
+        Synchronous audio-rate latching via <code>3D_snapshot_sync_polyvoice.gendsp</code> outputs formatted packets over UDP:
+        <br><code>/adm/obj/&lt;voiceID&gt;/xyz &lt;x&gt; &lt;y&gt; &lt;z&gt;</code> to port 4001 for external renderers (Dolby Atmos, SPAT, L-ISA, or the WebGL monitor).
+      </p>
+      <p class="lang-fr">
+        Échantillonnage synchrone au sample-rate via <code>3D_snapshot_sync_polyvoice.gendsp</code> envoyant des paquets UDP :
+        <br><code>/adm/obj/&lt;voiceID&gt;/xyz &lt;x&gt; &lt;y&gt; &lt;z&gt;</code> sur le port 4001 pour les moteurs externes (Dolby Atmos, SPAT, L-ISA, ou le visualiseur WebGL).
+      </p>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 15: MATRIX 32x64 & DIAGONAL -->
+    <section class="chapter" id="ch-matrix-routing">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 15 &bull; Routing</span>
+          <span class="lang-fr">Chapitre 15 &bull; Matrice 32&times;64</span>
+        </span>
+        <h2>
+          <span class="lang-en">32&times;64 Paged Routing Matrix &amp; Diagonal Patch (<code>matrix_32x64.js</code>)</span>
+          <span class="lang-fr">Matrice de Routage Paginée 32&times;64 &amp; Patch Diagonal (<code>matrix_32x64.js</code>)</span>
+        </h2>
+      </div>
+
+      <p class="lang-en">
+        Static 16&times;16 viewport visual routing interface addressing 32 inputs to 64 physical Dante/DAC outputs. Automatically locks columns above active <code>chans</code> and drives <code>[mcs.matrix~ 32 64 @ramp 20]</code> with click-free 20 ms fades.
+        <br><strong>Instant Diagonal Patch:</strong> Click the on-screen <code>diagonal</code> button (or send the message <code>diagonal</code> / <code>diag</code>) to automatically establish a 1:1 straight connection (Input N &rarr; Output N) up to the current active channel limit.
+      </p>
+      <p class="lang-fr">
+        Interface de routage visuelle à fenêtre statique 16&times;16 pour router 32 sources vers 64 sorties physiques Dante/DAC. Verrouille automatiquement les colonnes supérieures à <code>chans</code> et pilote <code>[mcs.matrix~ 32 64 @ramp 20]</code> avec fondus de 20 ms sans clic.
+        <br><strong>Patch Diagonal Immédiat :</strong> Cliquez sur le bouton <code>diagonal</code> (ou envoyez le message <code>diagonal</code> / <code>diag</code>) pour établir instantanément une liaison 1:1 droite (Entrée N &rarr; Sortie N) jusqu'à la limite du nombre de canaux actif.
+      </p>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 16: MULTICHANNEL REVERB -->
+    <section class="chapter" id="ch-multichannel-reverb">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 16 &bull; Acoustics</span>
+          <span class="lang-fr">Chapitre 16 &bull; Réverbération Spatiale FDN</span>
+        </span>
+        <h2>
+          <span class="lang-en">Multichannel Spatial FDN Reverb (<code>fdn_multireverb.gendsp</code>)</span>
+          <span class="lang-fr">Réverbération Spatiale FDN Multicanale (<code>fdn_multireverb.gendsp</code>)</span>
+        </h2>
+      </div>
+
+      <p class="lang-en">
+        Unitary Hadamard 4-delay Feedback Delay Network with rotating circular LFO modulation, golden-ratio prime detuning per loudspeaker channel, spectral tilt filter, and internal soft-clipping <code>tanh()</code> for controllable infinite self-oscillation.
+      </p>
+      <p class="lang-fr">
+        Réseau de retards récursifs (FDN) 4 lignes unitaire de Hadamard avec modulation LFO multiphasée rotative, détuning incommensurable au nombre d'or par enceinte, filtre Tilt et saturation douce <code>tanh()</code> permettant une auto-oscillation infinie musicale.
+      </p>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 17: EXTERNAL CONTROL & MIDI -->
+    <section class="chapter" id="ch-external-control">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 17 &bull; Control</span>
+          <span class="lang-fr">Chapitre 17 &bull; Contrôle Externe</span>
+        </span>
+        <h2>
+          <span class="lang-en">MIDI Mapping &amp; External Automation Integration</span>
+          <span class="lang-fr">Contrôle Externe, MIDI &amp; Points d'Accès [receive]</span>
+        </h2>
+      </div>
+
+      <p class="lead-sub lang-en">
+        Integrate external hardware controllers, foot pedals, or generative subpatchers via dedicated global receive buses.
+      </p>
+      <p class="lead-sub lang-fr">
+        Intégrez vos contrôleurs MIDI physiques, pédaliers ou séquenceurs externes via des points d'accès [receive] globaux dédiés.
+      </p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="lang-en">Internal Bus (receive)</span><span class="lang-fr">Point d'Accès (receive)</span></th>
+              <th><span class="lang-en">Expected Format</span><span class="lang-fr">Format Attendu</span></th>
+              <th><span class="lang-en">Action / Target</span><span class="lang-fr">Action / Module Cible</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>r -external-oneshot-</code></td>
+              <td><code>bang</code></td>
+              <td>
+                <span class="lang-en">Triggers a single polyphonic sound event (ideal for MIDI pads / foot pedals).</span>
+                <span class="lang-fr">Déclenche un événement sonore polyphonique unique (idéal pour pads MIDI ou pédale).</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>r -external-panic-</code></td>
+              <td><code>bang</code></td>
+              <td>
+                <span class="lang-en">Triggers selective voice panic and fade-out.</span>
+                <span class="lang-fr">Enclenche la coupure douce sélective de toutes les voix actives.</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>r -external-arpeggio-start-</code></td>
+              <td><code>bang</code></td>
+              <td>
+                <span class="lang-en">Initiates the stochastic cloud burst sequence.</span>
+                <span class="lang-fr">Démarre la séquence d'arpeggio / nuage stochastique.</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>r -external-arpeggio-stop-</code></td>
+              <td><code>bang</code></td>
+              <td>
+                <span class="lang-en">Halts ongoing stochastic cloud bursts.</span>
+                <span class="lang-fr">Interrompt immédiatement le nuage stochastique en cours.</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>r -external-spatdur-</code></td>
+              <td><code>float (ms)</code></td>
+              <td>
+                <span class="lang-en">Controls spatialization trajectory duration in real time (e.g. MIDI fader).</span>
+                <span class="lang-fr">Contrôle la durée de trajectoire spatiale en direct (ex. potentiomètre MIDI).</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>r -external-decay-</code></td>
+              <td><code>float (0..110)</code></td>
+              <td>
+                <span class="lang-en">Controls FDN reverb feedback decay time.</span>
+                <span class="lang-fr">Ajuste le temps de feedback de la réverbération FDN.</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 18: VOICE MONITOR -->
+    <section class="chapter" id="ch-monitoring">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 18 &bull; Diagnostics</span>
+          <span class="lang-fr">Chapitre 18 &bull; Moniteur des Voix</span>
+        </span>
+        <h2>
+          <span class="lang-en">Visual Voice Monitor Dashboard (<code>poly_monitor.js</code>)</span>
+          <span class="lang-fr">Moniteur Visuel d'Activité des Voix (<code>poly_monitor.js</code>)</span>
+        </h2>
+      </div>
+
+      <p class="lang-en">
+        Real-time 32-voice grid displaying genuine soundfile names, duration progress bars, transposition speeds (<code>vspd</code>), and amplitude levels in dB with glowing activity contours.
+      </p>
+      <p class="lang-fr">
+        Grille visuelle 32 voix affichant les vrais noms de fichiers, barres de défilement temporelles en temps réel, vitesses de transposition (<code>vspd</code>) et niveaux en dB avec contours illuminés réactifs.
+      </p>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 19: SELECTIVE PANIC -->
+    <section class="chapter" id="ch-panic">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 19 &bull; Voice Safety</span>
+          <span class="lang-fr">Chapitre 19 &bull; Coupure Sélective (Panic)</span>
+        </span>
+        <h2>
+          <span class="lang-en">Selective Voice Panic System</span>
+          <span class="lang-fr">Système de Panic Sélectif des Voix</span>
+        </h2>
+      </div>
+
+      <p class="lang-en">
+        Unlike global cutoffs, Swarm-Mangler's panic targets <em>only currently executing voices</em> via an internal registry, applying a smooth -0.65 exponential fade-out over <code>stopDur</code> milliseconds without awakening or glitching idle voices.
+      </p>
+      <p class="lang-fr">
+        Contrairement à une coupure brute, le bouton panic cible <em>uniquement les voix en cours de lecture</em> via un registre d'expiration, leur appliquant un fondu doux de <code>stopDur</code> millisecondes sans réveiller ni perturber les voix inactives.
+      </p>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+    <!-- CHAPTER 20: PARAMETERS REFERENCE -->
+    <section class="chapter" id="ch-parameter-ref">
+      <div class="chapter-header">
+        <span class="chapter-number">
+          <span class="lang-en">Chapter 20 &bull; Reference</span>
+          <span class="lang-fr">Chapitre 20 &bull; Référence Complète</span>
+        </span>
+        <h2>
+          <span class="lang-en">Complete Parameter &amp; Message Reference</span>
+          <span class="lang-fr">Tableau de Référence Exhaustif des Paramètres</span>
+        </h2>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th><span class="lang-en">Parameter</span><span class="lang-fr">Paramètre</span></th>
+              <th><span class="lang-en">Format / Range</span><span class="lang-fr">Format / Plage</span></th>
+              <th><span class="lang-en">Default</span><span class="lang-fr">Défaut</span></th>
+              <th><span class="lang-en">Description (EN / FR)</span><span class="lang-fr">Description (FR / EN)</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>ampMin</code>, <code>ampMax</code></td>
+              <td><code>float (dB)</code></td>
+              <td><code>-18.0, -3.0</code></td>
+              <td>
+                <span class="lang-en">Decibel amplitude range [-90 to +24 dB]</span>
+                <span class="lang-fr">Plage d'amplitude en décibels [-90 à +24 dB]</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>chans</code></td>
+              <td><code>int (1..64)</code></td>
+              <td><code>6</code></td>
+              <td>
+                <span class="lang-en">Active speaker channels count; locks unused matrix columns</span>
+                <span class="lang-fr">Nombre de canaux actifs; verrouille les colonnes excédentaires</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>clearsources</code></td>
+              <td><code>message</code></td>
+              <td>&mdash;</td>
+              <td>
+                <span class="lang-en">OSC command (/clearsources): purges all hung voice spheres in 3D viewer</span>
+                <span class="lang-fr">Commande OSC (/clearsources) : efface toutes les voix orphelines du visualiseur 3D</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>decay</code></td>
+              <td><code>float (0..110)</code></td>
+              <td><code>82.0</code></td>
+              <td>
+                <span class="lang-en">Reverb feedback decay (100 = infinite sustain)</span>
+                <span class="lang-fr">Temps de réverbération FDN (100 = équilibre infini)</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>diagonal</code> / <code>diag</code></td>
+              <td><code>message</code></td>
+              <td>&mdash;</td>
+              <td>
+                <span class="lang-en">Patches straight 1:1 matrix connections up to active chans</span>
+                <span class="lang-fr">Patch direct 1:1 dans la matrice jusqu'à la limite chans active</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>harmonicMode</code></td>
+              <td><code>0 | 1</code></td>
+              <td><code>0</code></td>
+              <td>
+                <span class="lang-en">0 = continuous float transpo, 1 = quantized modal scale</span>
+                <span class="lang-fr">0 = pitch continu flottant, 1 = quantification modale</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>is3D</code></td>
+              <td><code>0 | 1</code></td>
+              <td><code>0</code></td>
+              <td>
+                <span class="lang-en">0 = 2D horizontal ring (Z=0.5 median), 1 = autonomous 3D elevation (Z in 0..1)</span>
+                <span class="lang-fr">0 = couronne 2D (Z=0.5 médian), 1 = élévation 3D autonome (Z entre 0 et 1)</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>mode</code></td>
+              <td><code>0 | 1 | 2</code></td>
+              <td><code>0</code></td>
+              <td>
+                <span class="lang-en">0 = Straight, 1 = Varispeed/Ramp, 2 = Curve BPF</span>
+                <span class="lang-fr">0 = Vitesse normale, 1 = Varispeed/Rampe, 2 = Courbe BPF</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>panic</code></td>
+              <td><code>bang</code></td>
+              <td>&mdash;</td>
+              <td>
+                <span class="lang-en">Fades out active running voices over stopDur ms</span>
+                <span class="lang-fr">Extinction douce des voix actives sur la durée stopDur</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>size</code></td>
+              <td><code>float (0.5..100)</code></td>
+              <td><code>90.0</code></td>
+              <td>
+                <span class="lang-en">Reverb room size geometry &amp; delay scale</span>
+                <span class="lang-fr">Taille perçue de la réverbération FDN</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>spat-curve</code></td>
+              <td><code>float (1..6)</code></td>
+              <td><code>1.0</code></td>
+              <td>
+                <span class="lang-en">Ballistic trajectory ease-in curvature (1 = linear, 3 = snap)</span>
+                <span class="lang-fr">Courbure de trajectoire balistique (1 = linéaire, 3 = coup de fouet)</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>spat-damp</code></td>
+              <td><code>float (0..1)</code></td>
+              <td><code>0.0</code></td>
+              <td>
+                <span class="lang-en">Atmospheric air absorption damping based on radial distance</span>
+                <span class="lang-fr">Atténuation acoustique de l'air en fonction de la distance</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>spat-sharp</code></td>
+              <td><code>float (1..8)</code></td>
+              <td><code>1.0</code></td>
+              <td>
+                <span class="lang-en">Cosine beam slope exponent for sharp speaker isolation</span>
+                <span class="lang-fr">Exposant de focalisation pour détacher nettement les enceintes</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>spread</code></td>
+              <td><code>float (0..100)</code></td>
+              <td><code>90.0</code></td>
+              <td>
+                <span class="lang-en">Spatial decorrelation &amp; multiphase rotation depth</span>
+                <span class="lang-fr">Étalement et décorrélation spatiale inter-enceintes</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>stopDur</code></td>
+              <td><code>float (ms)</code></td>
+              <td><code>100.0</code></td>
+              <td>
+                <span class="lang-en">Panic release fade-out duration</span>
+                <span class="lang-fr">Durée du fondu de sortie lors d'un panic</span>
+              </td>
+            </tr>
+            <tr>
+              <td><code>transpoMin</code>, <code>transpoMax</code></td>
+              <td><code>float</code></td>
+              <td><code>0.8, 1.2</code></td>
+              <td>
+                <span class="lang-en">Pitch transposition bounds (or octave shift in modal mode)</span>
+                <span class="lang-fr">Bornes de transposition (ou bornes d'octaves en mode modal)</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <a href="#top" class="back-to-menu-link">&uarr; <span class="lang-en">Back to Top / Menu</span><span class="lang-fr">Retour au Menu</span></a>
+    </section>
+
+  </main>
+
+  <!-- FLOATING RETURN TO TOP BUTTON -->
+  <button id="floating-top-btn" title="Return to Top / Menu" aria-label="Return to Top">
+    <span>&uarr;</span> <span class="lang-en">Back to Menu</span><span class="lang-fr">Haut de Page</span>
+  </button>
+
+  <script src="js/doc.js"></script>
+</body>
+</html>

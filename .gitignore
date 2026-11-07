@@ -1,0 +1,47 @@
+# ==============================================================================
+# SWARM-MANGLER - .gitignore
+# ==============================================================================
+
+# OS System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Max / MSP temporary & crash files
+*.~*
+*.bak
+*.pat~
+*.maxpat~
+*.gendsp~
+*.maxhelp~
+
+# Max database & search caches
+max-cache/
+.max-cache/
+
+# Node for Max / NPM (if used with max_bridge.js)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Live multitrack recordings (prevent pushing heavy WAV takes to GitHub)
+recordings/
+*.wav
+*.wave
+*.aif
+*.aiff
+*.flac
+*.mp3
+
+# Except small demo audio files if you add a sample pool folder
+!samples_demo/*.wav
+!samples_demo/*.aif
+
+# User presets overrides / local experiments
+data/user_temp.json

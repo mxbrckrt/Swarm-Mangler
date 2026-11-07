@@ -1,0 +1,126 @@
+{
+    "patcher": {
+        "fileversion": 1,
+        "appversion": {
+            "major": 9,
+            "minor": 2,
+            "revision": 1,
+            "architecture": "x64",
+            "modernui": 1
+        },
+        "classnamespace": "dsp.gen",
+        "rect": [ 34.0, 102.0, 1007.0, 1008.0 ],
+        "lefttoolbarpinned": 2,
+        "toptoolbarpinned": 2,
+        "righttoolbarpinned": 2,
+        "bottomtoolbarpinned": 2,
+        "toolbars_unpinned_last_save": 15,
+        "subpatcher_template": "<none>",
+        "boxes": [
+            {
+                "box": {
+                    "id": "obj-6",
+                    "linecount": 2,
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 873.0, 14.0, 100.0, 35.0 ],
+                    "text": "in 4 @comment \"spatDur (ms)\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-5",
+                    "linecount": 2,
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 598.6666666666666, 14.0, 138.92215568862275, 35.0 ],
+                    "text": "in 3 @comment \"End position   (-1.0 to 1.0)\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-1",
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 50.0, 14.0, 169.0, 22.0 ],
+                    "text": "in 1 @comment \"trigger bang\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-2",
+                    "linecount": 2,
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 324.3333333333333, 14.0, 174.0, 35.0 ],
+                    "text": "in 2 @comment \"Start position (-1.0 to 1.0)\""
+                }
+            },
+            {
+                "box": {
+                    "code": "// =============================================================================\n// BALLISTIC TRAJECTORY GENERATOR (Acousmatic Whiplash / Ease-In)\n// Author: Max Bruckert (2026)\n// =============================================================================\n// A deterministic, sample-accurate ballistic trajectory interpolator designed\n// for rapid acousmatic spatial gestures and kinetic sound projections.\n//\n// Acoustic & Motion Mechanics:\n// - Non-linear ease-in warping (\"Whiplash\"): trajectory begins with sustained tension\n//   and terminates with sudden, high-velocity acceleration towards the target coordinate.\n// - Blends 80% exponential ease-in curvature with 20% linear progression to maintain\n//   perceptible spatial motion even in the early phase of the trajectory.\n// - Sample-accurate sample-rate-aware timing derived dynamically from spatDur (ms).\n// - Clean latching logic: maintains target position upon trajectory completion.\n//\n// Inlets:\n//   in1 : Trigger pulse (> 0.5 triggers a new ballistic trajectory)\n//   in2 : Start coordinate position (-1.0 to 1.0)\n//   in3 : End coordinate target position (-1.0 to 1.0)\n//   in4 : Spatialization duration in milliseconds (spatDur)\n//\n// Parameters:\n//   curve : Exponent factor for the ease-in curve (1.0 = linear, 3.0 = sharp whiplash, 6.0 = extreme)\n//\n// Outlets:\n//   out1 : Continuous interpolated coordinate output\n// =============================================================================\n\nParam curve(3.0, min=1.0, max=6.0); // 1.0 = linear, 3.0 = sharp whiplash, 6.0 = extreme ballistic\n\nHistory running(0);\nHistory current_sample(0);\nHistory total_samples(1);\nHistory start_val(0);\nHistory end_val(0);\n\n// --- 1. NEW TRAJECTORY TRIGGER DETECTION ---\ntrig = in1;\nif (trig > 0.5) {\n    running        = 1;\n    current_sample = 0;\n    // Convert duration (ms) to exact sample count at current sample rate\n    total_samples  = max(1, in4 * (samplerate * 0.001));\n    start_val      = in2;\n    end_val        = in3;\n}\n\n// --- 2. TRAJECTORY PROGRESSION & WARPING ---\nout_pos = end_val;\n\nif (running) {\n    // Normalized linear progress [0.0 ... 1.0]\n    p_lin = clip(current_sample / total_samples, 0.0, 1.0);\n    \n    // Composite curve: 80% exponential whiplash ease-in + 20% linear momentum\n    p_curved = (p_lin * 0.2) + (pow(p_lin, curve) * 0.8);\n    \n    // Geometric vector projection\n    out_pos = start_val + (end_val - start_val) * p_curved;\n    \n    // Increment sample clock and evaluate completion\n    current_sample += 1;\n    if (current_sample >= total_samples) {\n        running = 0;\n    }\n} else {\n    out_pos = end_val;\n}\n\n// --- 3. OUTPUT ASSIGNMENT ---\nout1 = out_pos;",
+                    "fontface": 0,
+                    "fontname": "<Monospaced>",
+                    "fontsize": 12.0,
+                    "id": "obj-3",
+                    "maxclass": "codebox",
+                    "numinlets": 4,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 50.0, 74.0, 842.0, 834.0 ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-4",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 50.0, 963.0, 35.0, 22.0 ],
+                    "text": "out 1"
+                }
+            }
+        ],
+        "lines": [
+            {
+                "patchline": {
+                    "destination": [ "obj-3", 0 ],
+                    "source": [ "obj-1", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-3", 1 ],
+                    "source": [ "obj-2", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-4", 0 ],
+                    "source": [ "obj-3", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-3", 2 ],
+                    "source": [ "obj-5", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-3", 3 ],
+                    "source": [ "obj-6", 0 ]
+                }
+            }
+        ],
+        "autosave": 0
+    }
+}

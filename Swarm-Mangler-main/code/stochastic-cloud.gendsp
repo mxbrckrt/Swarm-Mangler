@@ -1,0 +1,120 @@
+{
+    "patcher": {
+        "fileversion": 1,
+        "appversion": {
+            "major": 9,
+            "minor": 2,
+            "revision": 0,
+            "architecture": "x64",
+            "modernui": 1
+        },
+        "classnamespace": "dsp.gen",
+        "rect": [ 280.0, 68.0, 1039.0, 1072.0 ],
+        "lefttoolbarpinned": 2,
+        "toptoolbarpinned": 2,
+        "righttoolbarpinned": 2,
+        "bottomtoolbarpinned": 2,
+        "boxes": [
+            {
+                "box": {
+                    "id": "obj-7",
+                    "linecount": 3,
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 848.0, 1322.033898305085, 153.14285714285714, 49.0 ],
+                    "text": "out 3 @comment \"Active playback gate (1 = active, 0 = idle)\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-6",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 449.0, 1330.5084745762713, 229.0, 22.0 ],
+                    "text": "out 2 @comment \"Pulse counter (1 to N)\""
+                }
+            },
+            {
+                "box": {
+                    "code": "/**\n * @file        stochastic-cloud.gendsp\n * @description Stochastic Poisson/Geiger pulse-train sequencer for Max Gen~.\n * \n * ARCHITECTURE & BEHAVIOR:\n * - Emits a finite or looping train of N pulses with adjustable stochastic timing.\n * - Poisson distribution modeling (-log(r)) allows natural temporal clustering at high jitter.\n * - Integrated 1-sample inter-pulse guard prevents consecutive pulses from merging,\n *   ensuring downstream external counters and edge detectors never drop a count.\n * - Out3 stays high during the entire sequence and drops low precisely at completion or stop.\n * - Out2 holds the maximum count value upon reaching the final pulse in one-shot mode.\n * \n * IO SPECIFICATION:\n * - in1  : Start trigger (Signal > 0.1 initiates the sequence immediately)\n * - in2  : Stop trigger (Signal > 0.1 halts the sequence and resets states)\n * - out1 : Pulse output (PWM gate / trigger stream)\n * - out2 : Current pulse count index (1 to N, holds at N upon completion)\n * - out3 : Playback activity status (1 = running, 0 = idle/finished)\n * \n * PARAMETERS:\n * - occurrences : Total number of pulses to generate (min: 1)\n * - interval    : Base inter-onset interval in ms (range: 1 to 30000 ms)\n * - width       : Pulse width / duty cycle ratio (range: 0.01 to 0.99)\n * - loop        : Playback loop toggle (0 = one-shot, 1 = continuous loop)\n * - jitter      : Timing distribution variance (0 = periodic isochronous, 1 = Poisson clusters)\n */\n\n// =============================================================================\n// STATE MEMORY (HISTORY)\n// =============================================================================\nHistory running(0);       // Playback activity flag (1 = active, 0 = idle)\nHistory count(0);         // Current pulse iteration counter\nHistory phase(0);         // Intra-pulse normalized phase accumulator (0.0 to 1.0)\nHistory current_dur(0);   // Current interval duration in audio samples\nHistory base_s(0);        // Baseline interval converted to samples\n\n// =============================================================================\n// PARAMETERS\n// =============================================================================\nParam occurrences(16, min=1);            // Pulse quota\nParam interval(250, min=1, max=30000);   // Target interval in ms (clamped to 30s)\nParam width(0.5, min=0.01, max=0.99);    // Pulse duty cycle (PWM)\nParam loop(0, min=0, max=1);             // Loop mode switch (0: one-shot, 1: loop)\nParam jitter(0, min=0, max=1);           // Stochastic dispersion (0: strict, 1: Poisson)\n\n// =============================================================================\n// PRE-COMPUTATION\n// =============================================================================\n// Compute base sample interval continuously to guarantee global scope access\nbase_s = (interval * samplerate) / 1000;\n\n// =============================================================================\n// INPUT TRIGGER HANDLING\n// =============================================================================\n\n// Start command (Inlet 1)\nif (in1 > 0.1) {\n    running = 1;\n    count = 1;\n    phase = 0;\n    \n    // Initial interval evaluation using Poisson exponential distribution\n    r = max((noise() + 1) * 0.5, 0.001);\n    j_dist = -log(r);\n    current_dur = max(2, base_s * mix(1, j_dist, jitter));\n}\n\n// Stop command (Inlet 2)\nif (in2 > 0.1) {\n    running = 0;\n    count = 0;\n    phase = 0;\n}\n\n// =============================================================================\n// MAIN SEQUENCING ENGINE\n// =============================================================================\npulse_signal = 0;\n\nif (running) {\n    safe_dur = max(current_dur, 2);\n    p_inc = 1 / safe_dur;\n    \n    // PWM pulse evaluation with mandatory 1-sample gap to prevent pulse fusion\n    if (phase < width && phase < (1 - p_inc)) {\n        pulse_signal = 1;\n    }\n\n    // Advance phase accumulator\n    phase += p_inc;\n\n    // End of current interval reached\n    if (phase >= 1) {\n        phase = 0;\n        \n        if (count >= occurrences) {\n            if (loop > 0.5) {\n                // Loop sequence\n                count = 1;\n                r_loop = max((noise() + 1) * 0.5, 0.001);\n                current_dur = max(2, base_s * mix(1, -log(r_loop), jitter));\n            } else {\n                // Terminate one-shot sequence (count holds at occurrences)\n                running = 0;\n            }\n        } else {\n            // Step to next pulse\n            count += 1;\n            r_next = max((noise() + 1) * 0.5, 0.001);\n            current_dur = max(2, base_s * mix(1, -log(r_next), jitter));\n        }\n    }\n}\n\n// =============================================================================\n// OUTPUT ROUTING\n// =============================================================================\nout1 = pulse_signal; // Outlet 1: PWM pulse audio signal\nout2 = count;        // Outlet 2: Pulse counter (1 to N)\nout3 = running;      // Outlet 3: Active playback gate (1 = active, 0 = idle)",
+                    "fontface": 0,
+                    "fontname": "<Monospaced>",
+                    "fontsize": 12.0,
+                    "id": "obj-5",
+                    "maxclass": "codebox",
+                    "numinlets": 2,
+                    "numoutlets": 3,
+                    "outlettype": [ "", "", "" ],
+                    "patching_rect": [ 50.0, 56.81818181818182, 817.0, 1242.3728813559323 ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-1",
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 50.0, 21.0, 375.0, 22.0 ],
+                    "text": "in 1 @comment \"params inlet, 1 audio click will trigger the sequence\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-2",
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 558.9999999999999, 20.999999999999996, 308.0, 22.0 ],
+                    "text": "in 2 @comment \"One audio click will stop the sequence\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-4",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 50.0, 1330.5084745762713, 241.0, 22.0 ],
+                    "text": "out 1 @comment \"PWM pulse audio signal\""
+                }
+            }
+        ],
+        "lines": [
+            {
+                "patchline": {
+                    "destination": [ "obj-5", 0 ],
+                    "source": [ "obj-1", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-5", 1 ],
+                    "midpoints": [ 568.4999999999999, 49.90909090909091, 857.5, 49.90909090909091 ],
+                    "source": [ "obj-2", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-4", 0 ],
+                    "source": [ "obj-5", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-6", 0 ],
+                    "source": [ "obj-5", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-7", 0 ],
+                    "source": [ "obj-5", 2 ]
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,105 @@
+{
+    "patcher": {
+        "fileversion": 1,
+        "appversion": {
+            "major": 9,
+            "minor": 2,
+            "revision": 1,
+            "architecture": "x64",
+            "modernui": 1
+        },
+        "classnamespace": "dsp.gen",
+        "rect": [ 142.0, 81.0, 978.0, 1067.0 ],
+        "lefttoolbarpinned": 2,
+        "toptoolbarpinned": 2,
+        "righttoolbarpinned": 2,
+        "bottomtoolbarpinned": 2,
+        "toolbars_unpinned_last_save": 15,
+        "subpatcher_template": "maxb_default",
+        "boxes": [
+            {
+                "box": {
+                    "id": "obj-5",
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 789.0, 9.0, 153.0, 22.0 ],
+                    "text": "in 3 @comment \"Y (-1…1)\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-1",
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 7.0, 9.0, 147.0, 22.0 ],
+                    "text": "in 1 @comment \"audio in\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-2",
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 398.0, 9.0, 153.0, 22.0 ],
+                    "text": "in 2 @comment \"X (-1…1)\""
+                }
+            },
+            {
+                "box": {
+                    "code": "// =============================================================================\n// HIGH-CONTRAST MULTICHANNEL ADM PANNER WITH AIR ABSORPTION DAMPING\n// =============================================================================\n// Inlets:\n//   in1 : Audio input signal (mono voice signal)\n//   in2 : Coord X (-1.0 to 1.0) in Mode 0 | Linear Position (-1.0 to 1.0) in Mode 1\n//   in3 : Coord Y (-1.0 to 1.0) in Mode 0 | Unused in Mode 1\n//\n// Parameters:\n//   mode      : 0 = Cartesian ADM X/Y, 1 = Linear Panning\n//   width     : Angular aperture / beam width (0% = laser pin-point, 100% = normal, 200% = wide)\n//   sharpness : Beam slope exponent (1.0 = gentle cos, 2.0 = crisp, 4.0 = razor-sharp isolation)\n//   air_damp  : High-frequency air absorption intensity (0.0 = off, 1.0 = deep air damping)\n//   smooth    : Coordinate slewing in samples (default: 240 samples ~ 5 ms at 48 kHz)\n// =============================================================================\n\nParam mode(0, min=0, max=1);\nParam width(100.0, min=1.0, max=200.0);\nParam sharpness(2.5, min=1.0, max=8.0);\nParam air_damp(0.65, min=0.0, max=1.0);\nParam smooth(240, min=1);\n\nHistory prev_filtered(0.0);\n\n// 1. Détection du nombre d'enceintes MC\nspeakers = max(2, mc_channelcount);\nch_idx   = mc_channel - 1; // Index 0 à (speakers - 1)\n\n// 2. Lissage réactif des coordonnées\nx_s = slide(in2, smooth, smooth);\ny_s = slide(in3, smooth, smooth);\n\n// 3. Calcul spatial selon le mode\ngain_spatial = 0.0;\nd            = 1.0;\n\nif (mode > 0.5) {\n    // -------------------------------------------------------------------------\n    // MODE 1 : Panning Linéaire continu [0...1[\n    // -------------------------------------------------------------------------\n    src_pos  = clip((x_s + 1.0) * 0.5, 0.0, 1.0);\n    spk_pos  = ch_idx / (speakers - 1.0);\n    lin_dist = abs(src_pos - spk_pos);\n    \n    w_norm   = clip(width * 0.01, 0.05, 2.0);\n    beam     = (1.5 / (speakers - 1.0)) * w_norm;\n    \n    if (lin_dist < beam) {\n        cos_val      = cos((lin_dist / beam) * (PI * 0.5));\n        gain_spatial = pow(cos_val, sharpness);\n    }\n} else {\n    // -------------------------------------------------------------------------\n    // MODE 0 : Anneau Circulaire ADM Universel (Sens horaire : Face -> D -> Dos -> G)\n    // -------------------------------------------------------------------------\n    // Inversion y_s / x_s dans cartopol pour aligner Face (+Y) à 0 rad\n    r, rad    = cartopol(y_s, x_s);\n    d         = clip(r, 0.0, 1.0);\n    teta_norm = wrap(rad / (2.0 * PI), 0.0, 1.0); // 0 = Face, 0.25 = D, 0.5 = Dos, 0.75 = G\n\n    // Position angulaire de l'enceinte courante avec symétrie avant (paire Ch1 - Ch2)\n    speaker_pos = wrap((ch_idx - 0.5) / speakers, 0.0, 1.0);\n\n    // Distance angulaire la plus courte circulaire [0.0 ... 0.5]\n    diff     = abs(teta_norm - speaker_pos);\n    ang_dist = min(diff, 1.0 - diff) * 2.0; // Normalisé [0 = aligné, 1 = opposé]\n\n    // Courbe de focalisation cosinus\n    w_norm     = clip(width * 0.01, 0.05, 2.0);\n    beam_limit = (2.0 / speakers) * w_norm;\n\n    if (ang_dist < beam_limit) {\n        cos_val      = cos((ang_dist / beam_limit) * (PI * 0.5));\n        gain_spatial = pow(cos_val, sharpness);\n    }\n\n    // Contraste radial : atténuation naturelle vers le centre\n    gain_spatial = gain_spatial * ((d * 0.7) + 0.3);\n}\n\n// =============================================================================\n// 4. ABSORPTION ATMOSPHÉRIQUE ACOUSTIQUE (ISO 9613-1 APPROX)\n// =============================================================================\nmin_cutoff = 2500.0;\nmax_cutoff = 20000.0;\n\ncutoff_target = max_cutoff - (d * d * air_damp * (max_cutoff - min_cutoff));\ncutoff_target = clip(cutoff_target, min_cutoff, max_cutoff);\n\nw     = (2.0 * PI * cutoff_target) / samplerate;\nalpha = clip(w / (w + 1.0), 0.001, 1.0);\n\nfiltered      = (in1 * alpha) + (prev_filtered * (1.0 - alpha));\nprev_filtered = filtered;\n\n// 5. Sortie finale combinée\nout1 = filtered * gain_spatial;",
+                    "fontface": 0,
+                    "fontname": "<Monospaced>",
+                    "fontsize": 12.0,
+                    "id": "obj-3",
+                    "maxclass": "codebox",
+                    "numinlets": 3,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 7.0, 45.0, 801.0, 989.0 ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-4",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 7.0, 1043.0, 35.0, 22.0 ],
+                    "text": "out 1"
+                }
+            }
+        ],
+        "lines": [
+            {
+                "patchline": {
+                    "destination": [ "obj-3", 0 ],
+                    "source": [ "obj-1", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-3", 1 ],
+                    "source": [ "obj-2", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-4", 0 ],
+                    "source": [ "obj-3", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-3", 2 ],
+                    "source": [ "obj-5", 0 ]
+                }
+            }
+        ]
+    }
+}

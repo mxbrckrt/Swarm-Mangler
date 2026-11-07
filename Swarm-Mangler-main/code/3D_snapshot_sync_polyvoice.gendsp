@@ -1,0 +1,192 @@
+{
+    "patcher": {
+        "fileversion": 1,
+        "appversion": {
+            "major": 9,
+            "minor": 2,
+            "revision": 1,
+            "architecture": "x64",
+            "modernui": 1
+        },
+        "classnamespace": "dsp.gen",
+        "rect": [ 35.0, 74.0, 1307.0, 1089.0 ],
+        "lefttoolbarpinned": 2,
+        "toptoolbarpinned": 2,
+        "righttoolbarpinned": 2,
+        "bottomtoolbarpinned": 2,
+        "toolbars_unpinned_last_save": 15,
+        "subpatcher_template": "maxb_default",
+        "boxes": [
+            {
+                "box": {
+                    "id": "obj-10",
+                    "linecount": 2,
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 1018.0, 1035.0, 231.16279069767438, 35.0 ],
+                    "text": "out 5 @comment \"Atomic single-sample capture trigger pulse\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-9",
+                    "linecount": 2,
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 770.0, 1035.0, 145.0, 35.0 ],
+                    "text": "out 4 @comment \"Latched Z coordinate\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-8",
+                    "linecount": 2,
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 521.0, 1035.0, 145.0, 35.0 ],
+                    "text": "out 3 @comment \"Latched Y coordinate\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-7",
+                    "linecount": 2,
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 273.0, 1035.0, 149.0, 35.0 ],
+                    "text": "out 2 @comment \" Latched X coordinate\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-6",
+                    "linecount": 2,
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 1018.0, 18.0, 232.0, 35.0 ],
+                    "text": "in 4 @comment \"Optional external trigger pulse (> 0.0) when syncMode == 1\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-5",
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 687.0, 18.0, 173.0, 22.0 ],
+                    "text": "in 3 @comment \"continuous Z\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-1",
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 24.0, 22.0, 174.0, 22.0 ],
+                    "text": "in 1 @comment \"continuous X\""
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-2",
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 356.0, 22.0, 174.0, 22.0 ],
+                    "text": "in 2 @comment \"continuous Y\""
+                }
+            },
+            {
+                "box": {
+                    "code": "// =============================================================================\n// MODULE: 3D TELEMETRY SYNCHRONIZER (GenExpr)\n// =============================================================================\n// DESCRIPTION:\n// Sample-accurate synchronous capture stage for 3D coordinates (X, Y, Z) \n// paired with a polyphonic voice identifier.\n// \n// FEATURES:\n// - Supports both autonomous internal metronome (periodic sampling) \n//   and external clock triggers (sample-accurate synchronization).\n// - Zero CPU/network overhead when disabled (active == 0).\n// - Guarantees sample-locked alignment across all 3 spatial axes, \n//   preventing coordinate drift or out-of-order OSC packet dispatch.\n//\n// INLETS:\n// - in1 (Signal) : Continuous X trajectory coordinate [-1.0 ... 1.0]\n// - in2 (Signal) : Continuous Y trajectory coordinate [-1.0 ... 1.0]\n// - in3 (Signal) : Continuous Z trajectory coordinate [ 0.0 ... 1.0]\n// - in4 (Signal) : Optional external trigger pulse (> 0.0) when syncMode == 1\n//\n// PARAMETERS:\n// - voice    (int)   : Voice index ID provided by [thispoly~] (default: 1)\n// - active   (bool)  : Voice playback gate (1 = enabled, 0 = muted/idle)\n// - syncMode (int)   : Clock source selector:\n//                      0 = Internal periodic timer (uses 'interval' param)\n//                      1 = External pulse trigger (listens to inlet 4)\n// - interval (float) : Internal sampling period in ms (default: 20.0 ms = 50 Hz)\n//\n// OUTLETS:\n// - out1 (Signal) : Latched Voice ID\n// - out2 (Signal) : Latched X coordinate\n// - out3 (Signal) : Latched Y coordinate\n// - out4 (Signal) : Latched Z coordinate\n// - out5 (Signal) : Atomic single-sample capture trigger pulse (1.0)\n// =============================================================================\n\n// --- 1. PARAMETERS & HISTORIES (Strict Top-Level Declarations) ---\nParam voice(1, min=1);\nParam active(0, min=0, max=1);\nParam syncMode(0, min=0, max=1);\nParam interval(20.0, min=1.0);\n\nHistory clock_samps(0);\nHistory prev_ext_trig(0.0);\nHistory held_voice(1.0);\nHistory held_x(0.0);\nHistory held_y(0.0);\nHistory held_z(0.0);\n\n// --- 2. TRIGGER GENERATION LOGIC ---\ntrig = 0;\n\nif (active > 0.5) {\n    if (syncMode < 0.5) {\n        // Internal Clock Mode: periodic timer in milliseconds\n        interval_samples = maximum(mstosamps(interval), 1);\n        clock_samps += 1;\n        \n        if (clock_samps >= interval_samples) {\n            clock_samps = 0;\n            trig = 1;\n        }\n    } else {\n        // External Clock Mode: rising edge detection on inlet 4\n        ext_signal = in4;\n        if ((ext_signal > 0.0) && (prev_ext_trig <= 0.0)) {\n            trig = 1;\n        }\n        prev_ext_trig = ext_signal;\n    }\n} else {\n    // Reset counters and history when voice is muted\n    clock_samps = 0;\n    prev_ext_trig = 0.0;\n}\n\n// --- 3. SAMPLE-ACCURATE LATCH (SAMPLE & HOLD) ---\nif (trig == 1) {\n    held_voice = voice;\n    held_x = in1;\n    held_y = in2;\n    held_z = in3;\n}\n\n// --- 4. OUTPUT ASSIGNMENTS ---\nout1 = held_voice;\nout2 = held_x;\nout3 = held_y;\nout4 = held_z;\nout5 = trig;",
+                    "fontface": 0,
+                    "fontname": "<Monospaced>",
+                    "fontsize": 12.0,
+                    "id": "obj-3",
+                    "maxclass": "codebox",
+                    "numinlets": 4,
+                    "numoutlets": 5,
+                    "outlettype": [ "", "", "", "", "" ],
+                    "patching_rect": [ 24.0, 61.0, 1015.0, 958.0 ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-4",
+                    "linecount": 2,
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 24.0, 1035.0, 123.0, 35.0 ],
+                    "text": "out 1 @comment \"Latched Voice ID\""
+                }
+            }
+        ],
+        "lines": [
+            {
+                "patchline": {
+                    "destination": [ "obj-3", 0 ],
+                    "source": [ "obj-1", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-3", 1 ],
+                    "source": [ "obj-2", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-10", 0 ],
+                    "source": [ "obj-3", 4 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-4", 0 ],
+                    "source": [ "obj-3", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-7", 0 ],
+                    "source": [ "obj-3", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-8", 0 ],
+                    "source": [ "obj-3", 2 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-9", 0 ],
+                    "source": [ "obj-3", 3 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-3", 2 ],
+                    "source": [ "obj-5", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-3", 3 ],
+                    "source": [ "obj-6", 0 ]
+                }
+            }
+        ]
+    }
+}
