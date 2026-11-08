@@ -635,6 +635,55 @@ kbd {
 }
 
 /* =============================================================================
+   SOBER GUI ELEMENTS & COMMAND MESSAGES (2-Tier System)
+   Author: Max Bruckert
+   ============================================================================= */
+
+/* Simple, elegant, sober GUI control representation */
+.gui-el {
+  display: inline-block;
+  padding: 2px 7px;
+  font-size: 0.86rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: #f8fafc;
+  background-color: #141f32;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  white-space: nowrap;
+  vertical-align: baseline;
+  line-height: 1.35;
+}
+
+/* Subtle icon spacing only for the specific controls without native text */
+.gui-ico {
+  margin-right: 4px;
+  font-size: 0.9em;
+}
+
+/* 2-Tier UI Legend Box */
+.gui-legend-box {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin: 18px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  align-items: center;
+}
+
+.gui-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+/* =============================================================================
    NAVIGATION UTILITIES & ANCHORS
    ============================================================================= */
 

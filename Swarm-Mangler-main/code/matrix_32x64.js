@@ -28,6 +28,7 @@
  * - page_in <int>     : Selects source page (0 = 1-16, 1 = 17-32).
  * - page_out <int>    : Selects destination page (0..3).
  * - clear             : Resets the entire 32x64 grid to 0 and notifies pattr.
+ * - lock <0|1>        : Toggles or sets the matrix lock (1 = locked, 0 = unlocked).
  * - diagonal / diag   : Straight 1:1 patch (Inlet N -> Outlet N) up to the current
  *                       'chans' limit. Resets existing routings, assigns straight
  *                       points (0->0, 1->1, ...), immediately outputs to mcs.matrix~
@@ -40,6 +41,8 @@
  * - [diagonal] : Button located to the left of [clear]. Patches straight 1:1 connections
  *                for all active channels defined by the last 'chans' message.
  * - [clear]    : Clears all active matrix routes.
+ * - [lock]     : Button located to the right of [clear]. Toggles matrix lock to prevent
+ *                accidental edits during live performance.
  *
  * OUTLETS:
  * --------
@@ -393,6 +396,15 @@ function clear() {
     outlet(0, "clear");
 }
 
+function lock(v) {
+    if (arguments.length === 0) {
+        isMatrixLocked = !isMatrixLocked;
+    } else {
+        isMatrixLocked = (parseInt(v, 10) > 0);
+    }
+    mgraphics.redraw();
+}
+
 function list() {
     var a = arrayfromargs(arguments);
     if (a.length === 3) {
@@ -416,7 +428,9 @@ function list() {
 var inTabsRects   = [];
 var outTabsRects  = [];
 var clearBtnRect  = [0, 0, 0, 0];
+var lockBtnRect   = [0, 0, 0, 0];
 var diagBtnRect   = [0, 0, 0, 0];
+var isMatrixLocked = false;
 var hoverCol      = -1;
 var hoverRow      = -1;
 
@@ -455,21 +469,29 @@ function getLayout() {
 }
 
 function onclick(px, py, but, cmd, shift, capslock, fn, ctrl) {
+    // 0. Lock button click test (always accessible to toggle lock state)
+    if (px >= lockBtnRect[0] && px <= lockBtnRect[2] &&
+        py >= lockBtnRect[1] && py <= lockBtnRect[3]) {
+        isMatrixLocked = !isMatrixLocked;
+        mgraphics.redraw();
+        return;
+    }
+
     // 1. Diagonal button click test
     if (px >= diagBtnRect[0] && px <= diagBtnRect[2] &&
         py >= diagBtnRect[1] && py <= diagBtnRect[3]) {
-        diagonal();
+        if (!isMatrixLocked) diagonal();
         return;
     }
 
     // 2. Clear button click test
     if (px >= clearBtnRect[0] && px <= clearBtnRect[2] &&
         py >= clearBtnRect[1] && py <= clearBtnRect[3]) {
-        clear();
+        if (!isMatrixLocked) clear();
         return;
     }
 
-    // 3. Source input tabs click test
+    // 3. Source input tabs click test (always allowed to inspect pages)
     for (var i = 0; i < inTabsRects.length; i++) {
         var itr = inTabsRects[i];
         if (px >= itr.x1 && px <= itr.x2 && py >= itr.y1 && py <= itr.y2) {
@@ -479,7 +501,7 @@ function onclick(px, py, but, cmd, shift, capslock, fn, ctrl) {
         }
     }
 
-    // 4. Destination output tabs click test
+    // 4. Destination output tabs click test (always allowed to inspect pages)
     for (var o = 0; o < outTabsRects.length; o++) {
         var otr = outTabsRects[o];
         if (px >= otr.x1 && px <= otr.x2 && py >= otr.y1 && py <= otr.y2) {
@@ -489,7 +511,9 @@ function onclick(px, py, but, cmd, shift, capslock, fn, ctrl) {
         }
     }
 
-    // 5. Static 16x16 grid cell click
+    // 5. Static 16x16 grid cell click (strictly blocked when locked)
+    if (isMatrixLocked) return;
+
     var lay = getLayout();
     var relX = px - lay.leftMargin;
     var relY = py - lay.topMargin;
@@ -595,6 +619,35 @@ function paint() {
     var tmClear = mgraphics.text_measure("clear");
     mgraphics.move_to(clearBtnX + (btnW - tmClear[0]) * 0.5, btnY + (btnH + tmClear[1] * 0.6) * 0.5);
     mgraphics.show_text("clear");
+
+    // 3b. Lock button (Placed immediately to the right of [clear])
+    var lockBtnW = 44;
+    var lockBtnSpacing = 6;
+    var lockBtnX = clearBtnX + btnW + lockBtnSpacing;
+    lockBtnRect = [lockBtnX, btnY, lockBtnX + lockBtnW, btnY + btnH];
+
+    if (isMatrixLocked) {
+        mgraphics.set_source_rgba(_tabActiveBgColor);
+        mgraphics.rectangle_rounded(lockBtnX, btnY, lockBtnW, btnH, _cellRadius, _cellRadius);
+        mgraphics.fill();
+        mgraphics.set_source_rgba(_tabActiveBorderColor);
+    } else {
+        if (_clearBtnBgColor[3] > 0.0) {
+            mgraphics.set_source_rgba(_clearBtnBgColor);
+            mgraphics.rectangle_rounded(lockBtnX, btnY, lockBtnW, btnH, _cellRadius, _cellRadius);
+            mgraphics.fill();
+        }
+        mgraphics.set_source_rgba(_clearBtnBorderColor);
+    }
+    mgraphics.set_line_width(_borderWidth);
+    mgraphics.rectangle_rounded(lockBtnX, btnY, lockBtnW, btnH, _cellRadius, _cellRadius);
+    mgraphics.stroke();
+
+    mgraphics.set_source_rgba(isMatrixLocked ? [0.0, 1.0, 0.98, 1.0] : _clearTextColor);
+    mgraphics.set_font_size(_clearFontSize);
+    var tmLock = mgraphics.text_measure("lock");
+    mgraphics.move_to(lockBtnX + (lockBtnW - tmLock[0]) * 0.5, btnY + (btnH + tmLock[1] * 0.6) * 0.5);
+    mgraphics.show_text("lock");
 
     // 4. Diagonal button (Placed immediately to the left of [clear] with identical styling)
     var diagBtnW = 62;
