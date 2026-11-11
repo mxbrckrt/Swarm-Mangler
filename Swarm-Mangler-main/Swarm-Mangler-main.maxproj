@@ -2,7 +2,7 @@
     "name": "Swarm-Mangler-main",
     "version": 1,
     "creationdate": 3876624209,
-    "modificationdate": 3876877434,
+    "modificationdate": 3877229154,
     "viewrect": [ 25.0, 121.0, 326.0, 776.0 ],
     "autoorganize": 0,
     "hideprojectwindow": 0,
@@ -34,6 +34,10 @@
             },
             "matrix_32x64.js": {
                 "kind": "javascript"
+            },
+            "lp_butterworth.gendsp": {
+                "kind": "gendsp",
+                "local": 1
             },
             "poly_monitor.js": {
                 "kind": "javascript"

@@ -116,4 +116,40 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
   }
+
+  // 4. Diagram Fullscreen Zoom Toggle
+  const btnToggleZoom = document.getElementById("btnToggleZoom");
+  const diagramBox = document.getElementById("diagramBox");
+
+  function updateZoomButton(isFull) {
+    if (!btnToggleZoom) return;
+    const textEn = btnToggleZoom.querySelector(".lang-en.zoom-text");
+    const textFr = btnToggleZoom.querySelector(".lang-fr.zoom-text");
+    const icon = btnToggleZoom.querySelector(".zoom-icon");
+    if (isFull) {
+      if (textEn) textEn.textContent = "Exit Fullscreen (Esc)";
+      if (textFr) textFr.textContent = "Quitter Plein Écran (Échap)";
+      if (icon) icon.innerHTML = "&#x2715;";
+    } else {
+      if (textEn) textEn.textContent = "Fullscreen View";
+      if (textFr) textFr.textContent = "Vue Plein Écran";
+      if (icon) icon.innerHTML = "&#x26F6;";
+    }
+  }
+
+  if (btnToggleZoom && diagramBox) {
+    btnToggleZoom.addEventListener("click", function () {
+      const isFull = diagramBox.classList.toggle("is-fullscreen");
+      document.body.style.overflow = isFull ? "hidden" : "";
+      updateZoomButton(isFull);
+    });
+
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && diagramBox.classList.contains("is-fullscreen")) {
+        diagramBox.classList.remove("is-fullscreen");
+        document.body.style.overflow = "";
+        updateZoomButton(false);
+      }
+    });
+  }
 });

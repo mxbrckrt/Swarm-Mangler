@@ -1,0 +1,65 @@
+{
+    "patcher": {
+        "fileversion": 1,
+        "appversion": {
+            "major": 9,
+            "minor": 1,
+            "revision": 5,
+            "architecture": "x64",
+            "modernui": 1
+        },
+        "classnamespace": "dsp.gen",
+        "rect": [ 276.0, 102.0, 754.0, 1014.0 ],
+        "boxes": [
+            {
+                "box": {
+                    "id": "obj-1",
+                    "maxclass": "newobj",
+                    "numinlets": 0,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 23.0, 16.0, 28.0, 22.0 ],
+                    "text": "in 1"
+                }
+            },
+            {
+                "box": {
+                    "code": "/*******************************************************************************\n * FILTRE PASSE-BAS (LPF) - 24 dB/octave (Butterworth 4e ordre)\n * \n * DESCRIPTION :\n *   Filtre passe-bas à pente raide (24 dB/octave) composé de deux étages biquad \n *   du 2e ordre en série. Complément parfait du HPF ci-dessus pour isoler le \n *   registre grave destiné au(x) subwoofer(s).\n * \n * UTILISATION DANS MAX :\n *   À insérer dans un objet [gen~] (après un [mc.mixdown~ 1] si somme de 8 canaux).\n * \n * PARAMÈTRES / MESSAGES :\n *   - freq   : Fréquence de coupure en Hz (Défaut: 80, Min: 10, Max: 1000).\n *              Exemple : message [freq 80]\n *   - smooth : Temps de lissage de la fréquence en ms pour éviter les clics \n *              audio lors des changements (Défaut: 100 ms).\n *              Exemple : message [smooth 50]\n *******************************************************************************/\n\nParam freq(80, min=10, max=1000); // Fréquence de coupure cible (Hz)\nParam smooth(100);               // Temps de lissage (ms)\n\n// Variables d'état pour le lissage\nHistory current_freq(80);\n\n// Variables d'état Biquad 1\nHistory x1_1(0), x2_1(0), y1_1(0), y2_1(0);\n// Variables d'état Biquad 2\nHistory x1_2(0), x2_2(0), y1_2(0), y2_2(0);\n\n// --- 1. Lissage de la fréquence de coupure ---\nsmooth_samples = max(1, (smooth * 0.001) * SAMPLERATE);\nalpha_smooth = 1 / smooth_samples;\ncurrent_freq = current_freq + alpha_smooth * (freq - current_freq);\n\n// --- 2. Calcul des coefficients Butterworth Passe-Bas (4e ordre) ---\nq1 = 0.541196100146197;\nq2 = 1.306562964876376;\n\nf_clamped = clamp(current_freq, 10, SAMPLERATE * 0.49);\n\nw0 = 2 * PI * f_clamped / SAMPLERATE;\ncos_w0 = cos(w0);\nsin_w0 = sin(w0);\n\n// Section 1 (LPF)\nalpha1 = sin_w0 / (2 * q1);\nb0_1 = (1 - cos_w0) * 0.5;\nb1_1 = 1 - cos_w0;\nb2_1 = (1 - cos_w0) * 0.5;\na0_1 = 1 + alpha1;\na1_1 = -2 * cos_w0;\na2_1 = 1 - alpha1;\n\nnb0_1 = b0_1 / a0_1;\nnb1_1 = b1_1 / a0_1;\nnb2_1 = b2_1 / a0_1;\nna1_1 = a1_1 / a0_1;\nna2_1 = a2_1 / a0_1;\n\n// Section 2 (LPF)\nalpha2 = sin_w0 / (2 * q2);\nb0_2 = (1 - cos_w0) * 0.5;\nb1_2 = 1 - cos_w0;\nb2_2 = (1 - cos_w0) * 0.5;\na0_2 = 1 + alpha2;\na1_2 = -2 * cos_w0;\na2_2 = 1 - alpha2;\n\nnb0_2 = b0_2 / a0_2;\nnb1_2 = b1_2 / a0_2;\nnb2_2 = b2_2 / a0_2;\nna1_2 = a1_2 / a0_2;\nna2_2 = a2_2 / a0_2;\n\n// --- 3. Traitement audio ---\nx0 = in1;\n\n// Biquad 1 (12 dB/oct)\ny0_1 = nb0_1 * x0 + nb1_1 * x1_1 + nb2_1 * x2_1 - na1_1 * y1_1 - na2_1 * y2_1;\nx2_1 = x1_1;\nx1_1 = x0;\ny2_1 = y1_1;\ny1_1 = y0_1;\n\n// Biquad 2 (24 dB/oct total)\ny0_2 = nb0_2 * y0_1 + nb1_2 * x1_2 + nb2_2 * x2_2 - na1_2 * y1_2 - na2_2 * y2_2;\nx2_2 = x1_2;\nx1_2 = y0_1;\ny2_2 = y1_2;\ny1_2 = y0_2;\n\nout1 = y0_2;",
+                    "fontface": 0,
+                    "fontname": "<Monospaced>",
+                    "fontsize": 12.0,
+                    "id": "obj-3",
+                    "maxclass": "codebox",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 23.0, 52.0, 692.0, 830.0 ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-4",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 23.0, 931.0, 35.0, 22.0 ],
+                    "text": "out 1"
+                }
+            }
+        ],
+        "lines": [
+            {
+                "patchline": {
+                    "destination": [ "obj-3", 0 ],
+                    "source": [ "obj-1", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-4", 0 ],
+                    "source": [ "obj-3", 0 ]
+                }
+            }
+        ]
+    }
+}

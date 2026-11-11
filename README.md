@@ -8,7 +8,7 @@
 
 - **32 Parallel Voices**: Autonomous polyphonic granular engine powered by native `[mcs.poly~ player-core 32]`.
 - **Ballistic Spatial Engine**: Non-linear ease-in trajectory acceleration (`whiplash.gendsp`) and focused power-cosine panning with ISO air absorption (`adm_panner.gendsp`). Adaptive $Z$: planar median ear level ($Z = 0.5$) in 2D mode, full volume ($Z \in [0 \dots 1]$) in 3D mode.
-- **Standalone 3D WebGL Visualizer**: Hardware-accelerated Three.js monitor with amber glass spheres, vertical plumb lines, drop shadows, 8 ms anti-jitter masking, and drag-and-drop CSV/XLSX speaker layout ingestion.
+- **Standalone 3D WebGL Visualizer**: Hardware-accelerated Three.js monitor with high-contrast yellow spheres, white speaker wireframes, vertical plumb lines, 8 ms anti-jitter masking, HUD/fullscreen toggles, and drag-and-drop CSV/XLSX speaker layout ingestion.
 - **Sample-Accurate OSC Telemetry**: Emits `/adm/obj/<id>/xyz` packets over UDP for direct connection to Dolby Atmos, IRCAM SPAT, or L-Acoustics L-ISA.
 - **32×64 Paged Matrix (`matrix_32x64.js`)**: Static 16×16 viewport addressing up to 64 physical Dante/DAC outputs with 1-click `diagonal` 1:1 auto-patching and channel locking.
 - **Multichannel FDN Reverb**: 4×4 unitary Hadamard feedback network (`fdn_multireverb.gendsp`) featuring Golden Ratio prime detuning per loudspeaker channel and circular multiphase LFO rotation.

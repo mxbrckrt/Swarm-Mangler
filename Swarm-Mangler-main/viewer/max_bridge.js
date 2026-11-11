@@ -64,12 +64,12 @@ if (WebSocket) {
 /**
  * Handle incoming Max/MSP messages across all types.
  * Reconstructs raw OSC strings (e.g. "/adm/obj/24/xyz 0.45 0.75 0.3")
- * and broadcasts them to all active WebSocket clients.
+ * and broadcasts them immediately to all active WebSocket clients.
  */
 maxApi.addHandler(maxApi.MESSAGE_TYPES.ALL, (msg, ...args) => {
   if (clients.size === 0) return;
 
-  const rawLine = args.length > 0 ? `${msg} ${args.join(' ')}` : msg;
+  const rawLine = args.length > 0 ? `${msg} ${args.join(' ')}` : String(msg);
 
   for (const client of clients) {
     if (client.readyState === WebSocket.OPEN) {

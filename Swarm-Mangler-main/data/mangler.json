@@ -181,11 +181,11 @@
             "29": {
                 "id": 29,
                 "data": {
-                    "rev_mix": [ 15.0 ],
+                    "rev_mix": [ 18.0 ],
                     "rev_pdelay": [ 10.0 ],
                     "rev_depth": [ 5.0 ],
                     "rev_size": [ 100.0 ],
-                    "rev_decay": [ 94.0 ],
+                    "rev_decay": [ 92.0 ],
                     "rev_speed": [ 1.0 ],
                     "rev_absorb": [ 30.0 ],
                     "rev_tilt": [ 0.1 ],
@@ -210,11 +210,11 @@
                     "-polybuffer-::stretch-pitch": [ 1.0 ],
                     "-polybuffer-::pitch-proba": [ 80.0 ],
                     "-polybuffer-::pitch-stable": [ 0.9999999999999993 ],
-                    "-polybuffer-::spat-width": [ 100.0 ],
+                    "-polybuffer-::spat-width": [ 110.0 ],
                     "-polybuffer-::spat-smooth": [ 80.0 ],
                     "-polybuffer-::spat-3D": [ 1.0 ],
-                    "-polybuffer-::spat-curve": [ 1.1968503937007873 ],
-                    "-polybuffer-::spat-sharp": [ 2.0 ],
+                    "-polybuffer-::spat-curve": [ 1.0 ],
+                    "-polybuffer-::spat-sharp": [ 1.0 ],
                     "-polybuffer-::spat-damp": [ 15.0 ],
                     "-polybuffer-::playmode": [ 0.0 ],
                     "-polybuffer-::harmonic-menu": [ 16.0 ],
@@ -313,7 +313,7 @@
             "32": {
                 "id": 32,
                 "data": {
-                    "rev_mix": [ 15.0 ],
+                    "rev_mix": [ 20.0 ],
                     "rev_pdelay": [ 10.0 ],
                     "rev_depth": [ 5.0 ],
                     "rev_size": [ 100.0 ],

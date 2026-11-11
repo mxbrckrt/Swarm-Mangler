@@ -52,6 +52,7 @@
  *      without repetition until all files are consumed, then auto-reshuffles.
  *    - Mode 1 (Forward / Sequential)     : Linear step-by-step advance through buffers
  *      in loaded order (0, 1, 2, ... N-1, 0, 1, ...), looping indefinitely.
+ *      Activating Mode 1 (playMode 1) resets the sequence index to 0.
  * 
  * 8. HARMONIC RATIO QUANTIZER & OCTAVE SHIFTER (harmonicMode <0|1>):
  *    - Mode 0 (Continuous Float) : Uniform random pitch drawing between transpoMin & transpoMax.
@@ -177,7 +178,11 @@ function harmonyList() {
 // SETTERS & INLET COMMAND HANDLERS
 // =============================================================================
 function playMode(v) {
-    playModeState = parseInt(v, 10) ? 1 : 0;
+    var nextMode = parseInt(v, 10) ? 1 : 0;
+    if (nextMode === 1) {
+        forwardIndex = 0;
+    }
+    playModeState = nextMode;
 }
 
 function mode(v) {

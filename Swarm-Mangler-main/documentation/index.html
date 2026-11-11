@@ -656,37 +656,318 @@
         Swarm-Mangler est articulé autour de cinq couches de traitement coordonnées, exécutées de manière déterministe via les pipelines audio Multicanaux (MC) et Gen de Max :
       </p>
 
-      <div class="diagram-box">
-        <pre>
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                              SWARM-MANGLER SYSTEM TOPOLOGY                             │
-└────────────────────────────────────────────────────────────────────────────────────────┘
+      <div class="diagram-box" id="diagramBox">
+        <div class="diagram-toolbar">
+          <div class="diagram-toolbar-title">
+            <span class="lang-en">&#x2699;&#xFE0F; Multichannel System Architecture &amp; Signal Routing</span>
+            <span class="lang-fr">&#x2699;&#xFE0F; Architecture Système Multicanale &amp; Routage des Signaux</span>
+          </div>
+          <button type="button" class="btn-diagram-zoom" id="btnToggleZoom" title="Toggle Fullscreen / Basculer Plein Écran">
+            <span class="zoom-icon">&#x26F6;</span>
+            <span class="lang-en zoom-text">Fullscreen View</span>
+            <span class="lang-fr zoom-text">Vue Plein Écran</span>
+          </button>
+        </div>
+<svg class="system-topology-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1120" width="100%" height="auto" style="display:block; max-width:100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#060a16"/>
+      <stop offset="100%" stop-color="#0a1020"/>
+    </linearGradient>
+    <linearGradient id="banner-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0b162c"/>
+      <stop offset="50%" stop-color="#112244"/>
+      <stop offset="100%" stop-color="#0b162c"/>
+    </linearGradient>
+    <linearGradient id="card-dark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#121b2d"/>
+      <stop offset="100%" stop-color="#0a1120"/>
+    </linearGradient>
 
-  [Audio File Pool] ──> [Polybuffer 24-bit] ──> Equal-Power Mono Downmix (-3 dB)
-                                │
-                                ▼
-  [Kinetic Trigger] ──> [stochastic-cloud.gendsp] (Interval / Occurrences / Jitter)
-                                │
-                                ▼
-  [Granular Engine] ──> [mcs.poly~ player-core 32]
-                        ├── Integral Speed Ramp / Varispeed (master_engine.js)
-                        ├── Breakpoint Lookup Table (wave~ pitchcurve)
-                        ├── Harmonic Modal Quantizer (harmony_presets.json)
-                        └── Sample-Accurate Anti-Click ZigZag Envelope
-                                │
-                                ▼
-  [Spatial Engine]  ──> [whiplash.gendsp] Ballistic Easing Trajectory (X, Y, Z)
-                        [adm_panner.gendsp] Power-Cosine Loudspeaker Distribution
-                                │
-                                ├──> [3D OSC Stream] ──> WebSocket 8080 ──> WebGL 3D Monitor
-                                │                         UDP 9000       ──> External ADM (Atmos/SPAT)
-                                ▼
-  [Diffusion Core]  ──> [matrix_32x64.js] 16x16 Paged Viewport (Instant Diagonal / Lock)
-                        [mcs.matrix~ 32 64 @ramp 20] 20 ms Anti-Click Interpolation
-                                │
-                                ├──> [fdn_multireverb.gendsp] 4x4 Hadamard Spatial Reverb
-                                └──> [Dante / Physical DAC Outs 1..64] (24-bit WAV Multitrack)
-        </pre>
+    <!-- Arrow Markers -->
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#10b981"/>
+    </marker>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#c084fc"/>
+    </marker>
+    <marker id="arr-gold" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#facc15"/>
+    </marker>
+    <marker id="arr-cyan" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#00f0ff"/>
+    </marker>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1100" height="1120" rx="14" fill="url(#bg-grad)" stroke="#1e2c45" stroke-width="1.8"/>
+
+  <!-- Top Title Banner -->
+  <rect x="25" y="20" width="1050" height="50" rx="8" fill="url(#banner-grad)" stroke="#243757" stroke-width="1.2"/>
+  <circle cx="48" cy="45" r="6" fill="#00f0ff"/>
+  <text class="lang-en" x="68" y="51" font-size="15.5" font-weight="700" fill="#f1f5f9" letter-spacing="1.2">SWARM-MANGLER • SYSTEM TOPOLOGY &amp; DETERMINISTIC AUDIO PIPELINE</text>
+  <text class="lang-fr" x="68" y="51" font-size="15.5" font-weight="700" fill="#f1f5f9" letter-spacing="1.2">SWARM-MANGLER • TOPOLOGIE DU SYSTÈME &amp; PIPELINE AUDIO DÉTERMINISTE</text>
+  <rect x="905" y="31" width="155" height="28" rx="5" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="982" y="50" font-size="12" font-family="ui-monospace, monospace" font-weight="700" fill="#38bdf8" text-anchor="middle">32-VOICE MC • GEN</text>
+
+  <!-- ==================== LAYER 1A: AUDIO FILE POOL ==================== -->
+  <g id="layer-1a">
+    <rect x="25" y="86" width="510" height="140" rx="8" fill="url(#card-dark)" stroke="#10b981" stroke-width="1.8" stroke-opacity="0.75"/>
+    <path d="M 25 94 Q 25 86 33 86 L 527 86 Q 535 86 535 94 L 535 120 L 25 120 Z" fill="#07241d"/>
+    <text class="lang-en" x="42" y="110" font-size="13" font-weight="700" fill="#34d399" letter-spacing="1">LAYER 1A • AUDIO FILE POOL</text>
+    <text class="lang-fr" x="42" y="110" font-size="13" font-weight="700" fill="#34d399" letter-spacing="1">COUCHE 1A • BANQUE DE FICHIERS AUDIO</text>
+    <rect x="365" y="94" width="155" height="20" rx="4" fill="#0f2e24" stroke="#10b981" stroke-width="0.8"/>
+    <text x="442" y="108" font-size="11" font-family="ui-monospace, monospace" font-weight="600" fill="#6ee7b7" text-anchor="middle">[polybuffer~ 24-bit]</text>
+
+    <!-- Bullets -->
+    <circle cx="45" cy="142" r="3.5" fill="#10b981"/>
+    <text class="lang-en" x="58" y="147" font-size="14" font-weight="700" fill="#f1f5f9">Equal-Power Mono Downmix (-3 dB, 1/√2 ≈ 0.7071)</text>
+    <text class="lang-fr" x="58" y="147" font-size="14" font-weight="700" fill="#f1f5f9">Sommation Mono Équipuissance (-3 dB, 1/√2 ≈ 0,7071)</text>
+
+    <circle cx="45" cy="171" r="3.5" fill="#10b981"/>
+    <text class="lang-en" x="58" y="175" font-size="13" fill="#cbd5e1">Automated mono conversion • Zero phase cancellation • Fast RAM caching</text>
+    <text class="lang-fr" x="58" y="175" font-size="13" fill="#cbd5e1">Conversion mono auto • Zéro annulation de phase • Mise en cache RAM</text>
+
+    <circle cx="45" cy="199" r="3.5" fill="#10b981"/>
+    <text class="lang-en" x="58" y="203" font-size="13" fill="#94a3b8">Menu: load, open polybuffer, save, clear • count files refresh</text>
+    <text class="lang-fr" x="58" y="203" font-size="13" fill="#94a3b8">Menu : load, open polybuffer, save, clear • synchronisation count files</text>
+  </g>
+
+  <!-- ==================== LAYER 1B: KINETIC TRIGGER ==================== -->
+  <g id="layer-1b">
+    <rect x="565" y="86" width="510" height="140" rx="8" fill="url(#card-dark)" stroke="#c084fc" stroke-width="1.8" stroke-opacity="0.75"/>
+    <path d="M 565 94 Q 565 86 573 86 L 1067 86 Q 1075 86 1075 94 L 1075 120 L 565 120 Z" fill="#201232"/>
+    <text class="lang-en" x="582" y="110" font-size="13" font-weight="700" fill="#d8b4fe" letter-spacing="1">LAYER 1B • KINETIC TRIGGER ENGINE</text>
+    <text class="lang-fr" x="582" y="110" font-size="13" font-weight="700" fill="#d8b4fe" letter-spacing="1">COUCHE 1B • MOTEUR CINÉTIQUE STOCHASTIQUE</text>
+    <rect x="880" y="94" width="180" height="20" rx="4" fill="#2c1442" stroke="#c084fc" stroke-width="0.8"/>
+    <text x="970" y="108" font-size="11" font-family="ui-monospace, monospace" font-weight="600" fill="#e9d5ff" text-anchor="middle">[stochastic-cloud.gendsp]</text>
+
+    <!-- Bullets -->
+    <circle cx="585" cy="142" r="3.5" fill="#c084fc"/>
+    <text class="lang-en" x="598" y="147" font-size="14" font-weight="700" fill="#f1f5f9">Kinetic Interval, Occurrences, Jitter &amp; Cloud Density</text>
+    <text class="lang-fr" x="598" y="147" font-size="14" font-weight="700" fill="#f1f5f9">Intervalles Cinétiques, Occurrences, Gigue &amp; Densité</text>
+
+    <circle cx="585" cy="171" r="3.5" fill="#c084fc"/>
+    <text class="lang-en" x="598" y="175" font-size="13" fill="#cbd5e1">Bernoulli Gate (Toss-a-coin) • Probability of pitch-unchanged fallback</text>
+    <text class="lang-fr" x="598" y="175" font-size="13" fill="#cbd5e1">Porte de Bernoulli (Toss-a-coin) • Repli pitch-inchangé probabiliste</text>
+
+    <circle cx="585" cy="199" r="3.5" fill="#c084fc"/>
+    <text class="lang-en" x="598" y="203" font-size="13" fill="#94a3b8">Dynamic grain length (ms) &amp; polyphonic voice dispatch allocation</text>
+    <text class="lang-fr" x="598" y="203" font-size="13" fill="#94a3b8">Durées dynamiques de grains (ms) &amp; allocation des 32 voix</text>
+  </g>
+
+  <!-- Connectors Layer 1 -> Layer 2 -->
+  <line x1="280" y1="226" x2="280" y2="280" stroke="#10b981" stroke-width="2.5" marker-end="url(#arr-teal)"/>
+  <rect x="170" y="240" width="220" height="24" rx="5" fill="#07241d" stroke="#10b981" stroke-width="1"/>
+  <text class="lang-en" x="280" y="256" font-size="11.5" font-family="ui-monospace, monospace" font-weight="600" fill="#a7f3d0" text-anchor="middle">RAM Audio Buffers (24-bit)</text>
+  <text class="lang-fr" x="280" y="256" font-size="11.5" font-family="ui-monospace, monospace" font-weight="600" fill="#a7f3d0" text-anchor="middle">Buffers Audio RAM (24-bit)</text>
+
+  <line x1="820" y1="226" x2="820" y2="280" stroke="#c084fc" stroke-width="2.5" marker-end="url(#arr-purple)"/>
+  <rect x="705" y="240" width="230" height="24" rx="5" fill="#201232" stroke="#c084fc" stroke-width="1"/>
+  <text class="lang-en" x="820" y="256" font-size="11.5" font-family="ui-monospace, monospace" font-weight="600" fill="#f3e8ff" text-anchor="middle">Stochastic Trigger Impulses</text>
+  <text class="lang-fr" x="820" y="256" font-size="11.5" font-family="ui-monospace, monospace" font-weight="600" fill="#f3e8ff" text-anchor="middle">Impulsions Stochastiques</text>
+
+  <!-- ==================== LAYER 2: 32-VOICE GRANULAR CORE ==================== -->
+  <g id="layer-2">
+    <rect x="25" y="284" width="1050" height="216" rx="8" fill="url(#card-dark)" stroke="#facc15" stroke-width="1.8" stroke-opacity="0.8"/>
+    <path d="M 25 292 Q 25 284 33 284 L 1067 284 Q 1075 284 1075 292 L 1075 320 L 25 320 Z" fill="#261f06"/>
+    <text class="lang-en" x="42" y="308" font-size="14" font-weight="700" fill="#facc15" letter-spacing="1.2">LAYER 2 • 32-VOICE MULTICHANNEL GRANULAR CORE • [mcs.poly~ player-core 32]</text>
+    <text class="lang-fr" x="42" y="308" font-size="14" font-weight="700" fill="#facc15" letter-spacing="1.2">COUCHE 2 • CŒUR GRANULAIRE MULTICANAL 32 VOIX • [mcs.poly~ player-core 32]</text>
+
+    <!-- Submodule 1: master_engine.js -->
+    <rect x="40" y="330" width="242" height="156" rx="6" fill="#0d1527" stroke="#243859" stroke-width="1.2"/>
+    <rect x="50" y="340" width="145" height="20" rx="3" fill="#1e293b"/>
+    <text x="122" y="354" font-size="11" font-family="ui-monospace, monospace" font-weight="700" fill="#38bdf8" text-anchor="middle">master_engine.js</text>
+    <text class="lang-en" x="50" y="382" font-size="14" font-weight="700" fill="#f1f5f9">Integral Varispeed</text>
+    <text class="lang-fr" x="50" y="382" font-size="14" font-weight="700" fill="#f1f5f9">Varispeed &amp; Durée</text>
+    <text class="lang-en" x="50" y="408" font-size="12.5" fill="#cbd5e1">Speed ramp calculations</text>
+    <text class="lang-fr" x="50" y="408" font-size="12.5" fill="#cbd5e1">Rampes de vitesse continues</text>
+    <text class="lang-en" x="50" y="430" font-size="12.5" fill="#cbd5e1">Non-linear duration integral</text>
+    <text class="lang-fr" x="50" y="430" font-size="12.5" fill="#cbd5e1">Intégrale durée de lecture</text>
+    <text class="lang-en" x="50" y="452" font-size="12" fill="#94a3b8">Dynamic grain scheduling</text>
+    <text class="lang-fr" x="50" y="452" font-size="12" fill="#94a3b8">Ordonnancement dynamique</text>
+    <text class="lang-en" x="50" y="474" font-size="11" fill="#64748b">Strict memory safe sync</text>
+    <text class="lang-fr" x="50" y="474" font-size="11" fill="#64748b">Synchronisation mémoire sûre</text>
+
+    <!-- Submodule 2: wave~ pitchcurve -->
+    <rect x="298" y="330" width="242" height="156" rx="6" fill="#0d1527" stroke="#243859" stroke-width="1.2"/>
+    <rect x="308" y="340" width="155" height="20" rx="3" fill="#1e293b"/>
+    <text x="385" y="354" font-size="11" font-family="ui-monospace, monospace" font-weight="700" fill="#38bdf8" text-anchor="middle">[wave~ pitchcurve]</text>
+    <text class="lang-en" x="308" y="382" font-size="14" font-weight="700" fill="#f1f5f9">Breakpoint Table (LUT)</text>
+    <text class="lang-fr" x="308" y="382" font-size="14" font-weight="700" fill="#f1f5f9">Table de Profil (LUT)</text>
+    <text class="lang-en" x="308" y="408" font-size="12.5" fill="#cbd5e1">1024-pt breakpoint buffer</text>
+    <text class="lang-fr" x="308" y="408" font-size="12.5" fill="#cbd5e1">Buffer 1024 pts interpolés</text>
+    <text class="lang-en" x="308" y="430" font-size="12.5" fill="#cbd5e1">Pitch contour modulation</text>
+    <text class="lang-fr" x="308" y="430" font-size="12.5" fill="#cbd5e1">Modulation profil de pitch</text>
+    <text class="lang-en" x="308" y="452" font-size="12" fill="#94a3b8">Non-linear warps &amp; glides</text>
+    <text class="lang-fr" x="308" y="452" font-size="12" fill="#94a3b8">Glissandi &amp; trajectoires</text>
+    <text class="lang-en" x="308" y="474" font-size="11" fill="#64748b">Sample-rate independent</text>
+    <text class="lang-fr" x="308" y="474" font-size="11" fill="#64748b">Indépendant du sample-rate</text>
+
+    <!-- Submodule 3: harmony_presets.json -->
+    <rect x="556" y="330" width="242" height="156" rx="6" fill="#0d1527" stroke="#243859" stroke-width="1.2"/>
+    <rect x="566" y="340" width="170" height="20" rx="3" fill="#1e293b"/>
+    <text x="651" y="354" font-size="11" font-family="ui-monospace, monospace" font-weight="700" fill="#facc15" text-anchor="middle">harmony_presets.json</text>
+    <text class="lang-en" x="566" y="382" font-size="14" font-weight="700" fill="#f1f5f9">Harmonic Quantizer</text>
+    <text class="lang-fr" x="566" y="382" font-size="14" font-weight="700" fill="#f1f5f9">Quantificateur Modal</text>
+    <text class="lang-en" x="566" y="408" font-size="12.5" fill="#cbd5e1">12 Harmonic micro-scales</text>
+    <text class="lang-fr" x="566" y="408" font-size="12.5" fill="#cbd5e1">12 Gammes harmoniques</text>
+    <text class="lang-en" x="566" y="430" font-size="12.5" fill="#cbd5e1">Strict semitone / ratio locks</text>
+    <text class="lang-fr" x="566" y="430" font-size="12.5" fill="#cbd5e1">Verrouillage intervalles/ratios</text>
+    <text class="lang-en" x="566" y="452" font-size="12" fill="#94a3b8">Modal pitch on/off mapping</text>
+    <text class="lang-fr" x="566" y="452" font-size="12" fill="#94a3b8">Asservissement modal actif</text>
+    <text class="lang-en" x="566" y="474" font-size="11" fill="#64748b">Microtonal &amp; custom modes</text>
+    <text class="lang-fr" x="566" y="474" font-size="11" fill="#64748b">Modes microtonaux &amp; tempérés</text>
+
+    <!-- Submodule 4: zigzag~ -->
+    <rect x="814" y="330" width="246" height="156" rx="6" fill="#0d1527" stroke="#243859" stroke-width="1.2"/>
+    <rect x="824" y="340" width="100" height="20" rx="3" fill="#1e293b"/>
+    <text x="874" y="354" font-size="11" font-family="ui-monospace, monospace" font-weight="700" fill="#38bdf8" text-anchor="middle">[zigzag~]</text>
+    <text class="lang-en" x="824" y="382" font-size="14" font-weight="700" fill="#f1f5f9">Anti-Click Envelopes</text>
+    <text class="lang-fr" x="824" y="382" font-size="14" font-weight="700" fill="#f1f5f9">Enveloppes Anti-Clic</text>
+    <text class="lang-en" x="824" y="408" font-size="12.5" fill="#cbd5e1">Sample-accurate windowing</text>
+    <text class="lang-fr" x="824" y="408" font-size="12.5" fill="#cbd5e1">Fenêtrage synchrone échantillon</text>
+    <text class="lang-en" x="824" y="430" font-size="12.5" fill="#cbd5e1">Linear &amp; cosine window modes</text>
+    <text class="lang-fr" x="824" y="430" font-size="12.5" fill="#cbd5e1">Profils linéaire &amp; cosinus</text>
+    <text class="lang-en" x="824" y="452" font-size="12" fill="#94a3b8">Zero-truncation guarantees</text>
+    <text class="lang-fr" x="824" y="452" font-size="12" fill="#94a3b8">Protection anti-troncature</text>
+    <text class="lang-en" x="824" y="474" font-size="11" fill="#64748b">Smooth grain transitions</text>
+    <text class="lang-fr" x="824" y="474" font-size="11" fill="#64748b">Transitions de grains fluides</text>
+  </g>
+
+  <!-- Connector Layer 2 -> Layer 3 -->
+  <line x1="550" y1="500" x2="550" y2="552" stroke="#facc15" stroke-width="3" marker-end="url(#arr-gold)"/>
+  <rect x="350" y="514" width="400" height="24" rx="5" fill="#221a05" stroke="#facc15" stroke-width="1"/>
+  <text class="lang-en" x="550" y="530" font-size="11.5" font-family="ui-monospace, monospace" font-weight="600" fill="#fde047" text-anchor="middle">32-Ch Multichannel Audio + Dynamic Vectors (X, Y, Z)</text>
+  <text class="lang-fr" x="550" y="530" font-size="11.5" font-family="ui-monospace, monospace" font-weight="600" fill="#fde047" text-anchor="middle">32 Canaux Audio MC + Vecteurs Dynamiques (X, Y, Z)</text>
+
+  <!-- ==================== LAYER 3: BALLISTIC SPATIAL ENGINE ==================== -->
+  <g id="layer-3">
+    <rect x="25" y="556" width="1050" height="164" rx="8" fill="url(#card-dark)" stroke="#00f0ff" stroke-width="1.8" stroke-opacity="0.8"/>
+    <path d="M 25 564 Q 25 556 33 556 L 1067 556 Q 1075 556 1075 564 L 1075 592 L 25 592 Z" fill="#092636"/>
+    <text class="lang-en" x="42" y="580" font-size="14" font-weight="700" fill="#00f0ff" letter-spacing="1.2">LAYER 3 • BALLISTIC SPATIAL ENGINE &amp; ADM TRAJECTORIES</text>
+    <text class="lang-fr" x="42" y="580" font-size="14" font-weight="700" fill="#00f0ff" letter-spacing="1.2">COUCHE 3 • MOTEUR SPATIAL BALISTIQUE &amp; TRAJECTOIRES ADM</text>
+
+    <!-- Submodule 3.1: whiplash.gendsp -->
+    <rect x="40" y="602" width="505" height="104" rx="6" fill="#0c192d" stroke="#213d5b" stroke-width="1.2"/>
+    <rect x="50" y="612" width="145" height="20" rx="3" fill="#162a3f" stroke="#00f0ff" stroke-width="0.8"/>
+    <text x="122" y="626" font-size="11" font-family="ui-monospace, monospace" font-weight="700" fill="#67e8f9" text-anchor="middle">whiplash.gendsp</text>
+    <text class="lang-en" x="205" y="627" font-size="13.5" font-weight="700" fill="#f1f5f9">Ballistic Easing • ADM X, Y, Z ∈ [0..1]</text>
+    <text class="lang-fr" x="205" y="627" font-size="13.5" font-weight="700" fill="#f1f5f9">Balistique Whiplash • ADM X, Y, Z ∈ [0..1]</text>
+    <text class="lang-en" x="50" y="654" font-size="12.5" fill="#cbd5e1">Dual-phase trajectory: explosive launch, high-speed flight &amp; snap deceleration</text>
+    <text class="lang-fr" x="50" y="654" font-size="12.5" fill="#cbd5e1">Trajectoire biphasique : accélération initiale, vol balistique &amp; arrêt net</text>
+    <text class="lang-en" x="50" y="676" font-size="12" fill="#94a3b8">Autonomous Doppler-free coordinate synthesis in normalized unit cube</text>
+    <text class="lang-fr" x="50" y="676" font-size="12" fill="#94a3b8">Calcul autonome des coordonnées sans Doppler dans le cube unité</text>
+    <text class="lang-en" x="50" y="696" font-size="11" fill="#64748b">Smooth kinetic trajectory curves calibrated to human spatial perception</text>
+    <text class="lang-fr" x="50" y="696" font-size="11" fill="#64748b">Courbes cinétiques lissées calibrées sur la perception spatiale humaine</text>
+
+    <!-- Submodule 3.2: adm_panner.gendsp -->
+    <rect x="565" y="602" width="495" height="104" rx="6" fill="#0c192d" stroke="#213d5b" stroke-width="1.2"/>
+    <rect x="575" y="612" width="155" height="20" rx="3" fill="#162a3f" stroke="#00f0ff" stroke-width="0.8"/>
+    <text x="652" y="626" font-size="11" font-family="ui-monospace, monospace" font-weight="700" fill="#67e8f9" text-anchor="middle">adm_panner.gendsp</text>
+    <text class="lang-en" x="740" y="627" font-size="13.5" font-weight="700" fill="#f1f5f9">Power-Cosine Radiation &amp; Air Damping</text>
+    <text class="lang-fr" x="740" y="627" font-size="13.5" font-weight="700" fill="#f1f5f9">Rayonnement Cosinus &amp; Absorption d'Air</text>
+    <text class="lang-en" x="575" y="654" font-size="12.5" fill="#cbd5e1">Equal-power loudspeaker weights with crisp spatial focusing radiation beam</text>
+    <text class="lang-fr" x="575" y="654" font-size="12.5" fill="#cbd5e1">Pondération équipuissance avec directivité cosinus resserrée</text>
+    <text class="lang-en" x="575" y="676" font-size="12" fill="#94a3b8">ISO atmospheric absorption filter roll-off dynamically linked to distance</text>
+    <text class="lang-fr" x="575" y="676" font-size="12" fill="#94a3b8">Filtrage d'absorption d'air ISO dynamique asservi à l'éloignement</text>
+    <text class="lang-en" x="575" y="696" font-size="11" fill="#64748b">Real-time attenuation and HF damping per loudspeaker channel</text>
+    <text class="lang-fr" x="575" y="696" font-size="11" fill="#64748b">Atténuation et amortissement HF temps réel par canal d'enceinte</text>
+  </g>
+
+  <!-- Connectors Layer 3 -> Layer 4 (Split) -->
+  <!-- Telemetry branch (Cyan dashed) -->
+  <line x1="280" y1="720" x2="280" y2="774" stroke="#00f0ff" stroke-width="2.5" stroke-dasharray="5,4" marker-end="url(#arr-cyan)"/>
+  <rect x="170" y="734" width="220" height="24" rx="5" fill="#072433" stroke="#00f0ff" stroke-width="1"/>
+  <text class="lang-en" x="280" y="750" font-size="11.5" font-family="ui-monospace, monospace" font-weight="600" fill="#67e8f9" text-anchor="middle">OSC / ADM Telemetry (X,Y,Z)</text>
+  <text class="lang-fr" x="280" y="750" font-size="11.5" font-family="ui-monospace, monospace" font-weight="600" fill="#67e8f9" text-anchor="middle">Télémétrie OSC / ADM (X,Y,Z)</text>
+
+  <!-- Audio branch (Teal solid) -->
+  <line x1="820" y1="720" x2="820" y2="774" stroke="#10b981" stroke-width="3" marker-end="url(#arr-teal)"/>
+  <rect x="710" y="734" width="220" height="24" rx="5" fill="#07241d" stroke="#10b981" stroke-width="1"/>
+  <text class="lang-en" x="820" y="750" font-size="11.5" font-family="ui-monospace, monospace" font-weight="600" fill="#a7f3d0" text-anchor="middle">32 Discrete Audio Channels</text>
+  <text class="lang-fr" x="820" y="750" font-size="11.5" font-family="ui-monospace, monospace" font-weight="600" fill="#a7f3d0" text-anchor="middle">32 Canaux Audio Discrets</text>
+
+  <!-- ==================== LAYER 4A: 3D TELEMETRY & MONITORING ==================== -->
+  <g id="layer-4a">
+    <rect x="25" y="778" width="510" height="318" rx="8" fill="url(#card-dark)" stroke="#00f0ff" stroke-width="1.8" stroke-opacity="0.8"/>
+    <path d="M 25 786 Q 25 778 33 778 L 527 778 Q 535 778 535 786 L 535 814 L 25 814 Z" fill="#092636"/>
+    <text class="lang-en" x="42" y="802" font-size="13" font-weight="700" fill="#00f0ff" letter-spacing="1">OUTPUT A • 3D OSC TELEMETRY &amp; MONITORING</text>
+    <text class="lang-fr" x="42" y="802" font-size="13" font-weight="700" fill="#00f0ff" letter-spacing="1">SORTIE A • TÉLÉMÉTRIE OSC 3D &amp; MONITEUR</text>
+
+    <!-- Sub-block 4A.1: WebSocket 8080 -->
+    <rect x="40" y="824" width="480" height="122" rx="6" fill="#0b182b" stroke="#1e3654" stroke-width="1.2"/>
+    <rect x="50" y="834" width="135" height="22" rx="4" fill="#0c2e3d" stroke="#00f0ff" stroke-width="0.8"/>
+    <text x="117" y="849" font-size="11" font-family="ui-monospace, monospace" font-weight="700" fill="#67e8f9" text-anchor="middle">WebSocket :8080</text>
+    <text class="lang-en" x="198" y="851" font-size="14" font-weight="700" fill="#f1f5f9">WebGL 3D Spatial Visualizer</text>
+    <text class="lang-fr" x="198" y="851" font-size="14" font-weight="700" fill="#f1f5f9">Visualiseur 3D Spatial WebGL</text>
+    <text class="lang-en" x="50" y="882" font-size="13" fill="#cbd5e1">32 Orbiting voice spheres with color-coded audio energy meters</text>
+    <text class="lang-fr" x="50" y="882" font-size="13" fill="#cbd5e1">32 Sphères vocales en orbite avec vumètres énergétiques audio</text>
+    <text class="lang-en" x="50" y="906" font-size="13" fill="#cbd5e1">CSV / XLSX Speaker Setup Drag &amp; Drop (2D &amp; 3D layouts)</text>
+    <text class="lang-fr" x="50" y="906" font-size="13" fill="#cbd5e1">Glisser-Déposer CSV / XLSX de géométries d'enceintes (2D &amp; 3D)</text>
+    <text class="lang-en" x="50" y="928" font-size="12" fill="#94a3b8">Standalone HTML5/WebGL viewer with HUD &amp; fullscreen controls</text>
+    <text class="lang-fr" x="50" y="928" font-size="12" fill="#94a3b8">Visualiseur autonome HTML5/WebGL avec masquage HUD &amp; plein écran</text>
+
+    <!-- Sub-block 4A.2: UDP 4001 (by default) -->
+    <rect x="40" y="958" width="480" height="124" rx="6" fill="#0b182b" stroke="#1e3654" stroke-width="1.2"/>
+    <rect x="50" y="968" width="215" height="22" rx="4" fill="#1e293b" stroke="#facc15" stroke-width="0.8"/>
+    <text class="lang-en" x="157" y="983" font-size="11" font-family="ui-monospace, monospace" font-weight="700" fill="#facc15" text-anchor="middle">UDP OSC :4001 (by default)</text>
+    <text class="lang-fr" x="157" y="983" font-size="11" font-family="ui-monospace, monospace" font-weight="700" fill="#facc15" text-anchor="middle">UDP OSC :4001 (par défaut)</text>
+    <text class="lang-en" x="278" y="985" font-size="14" font-weight="700" fill="#f1f5f9">External Spatial Engines</text>
+    <text class="lang-fr" x="278" y="985" font-size="14" font-weight="700" fill="#f1f5f9">Moteurs Spatiaux Externes</text>
+    <text class="lang-en" x="50" y="1016" font-size="13" fill="#cbd5e1">Dolby Atmos RMU • ADM-OSC standardized Cartesian coordinates</text>
+    <text class="lang-fr" x="50" y="1016" font-size="13" fill="#cbd5e1">Dolby Atmos RMU • Métadonnées ADM-OSC normalisées ITU-R BS.2076</text>
+    <text class="lang-en" x="50" y="1040" font-size="13" fill="#cbd5e1">IRCAM Spat &amp; Spat Revolution • L-Acoustics L-ISA • Meyer Sound Spacemap</text>
+    <text class="lang-fr" x="50" y="1040" font-size="13" fill="#cbd5e1">IRCAM Spat &amp; Spat Revolution • L-Acoustics L-ISA • Meyer Sound Spacemap</text>
+    <text class="lang-en" x="50" y="1062" font-size="12" fill="#94a3b8">Low-latency UDP packet streaming with host / port user configuration</text>
+    <text class="lang-fr" x="50" y="1062" font-size="12" fill="#94a3b8">Diffusion UDP ultra-faible latence avec port et IP émetteur configurables</text>
+  </g>
+
+  <!-- ==================== LAYER 4B: DIFFUSION MATRIX & ACOUSTICS ==================== -->
+  <g id="layer-4b">
+    <rect x="565" y="778" width="510" height="318" rx="8" fill="url(#card-dark)" stroke="#10b981" stroke-width="1.8" stroke-opacity="0.8"/>
+    <path d="M 565 786 Q 565 778 573 778 L 1067 778 Q 1075 778 1075 786 L 1075 814 L 565 814 Z" fill="#07241d"/>
+    <text class="lang-en" x="582" y="802" font-size="13" font-weight="700" fill="#34d399" letter-spacing="1">OUTPUT B • MULTICHANNEL DIFFUSION MATRIX &amp; ACOUSTICS</text>
+    <text class="lang-fr" x="582" y="802" font-size="13" font-weight="700" fill="#34d399" letter-spacing="1">SORTIE B • MATRICE DE DIFFUSION MULTICANALE &amp; ACOUSTIQUE</text>
+
+    <!-- Sub-block Upper: Matrix -->
+    <rect x="580" y="824" width="480" height="100" rx="6" fill="#0c1d24" stroke="#1b433e" stroke-width="1.2"/>
+    <rect x="590" y="834" width="125" height="22" rx="4" fill="#13372f" stroke="#10b981" stroke-width="0.8"/>
+    <text x="652" y="849" font-size="11" font-family="ui-monospace, monospace" font-weight="700" fill="#6ee7b7" text-anchor="middle">matrix_32x64.js</text>
+    <rect x="725" y="834" width="185" height="22" rx="4" fill="#1e293b" stroke="#64748b" stroke-width="0.8"/>
+    <text x="817" y="849" font-size="11" font-family="ui-monospace, monospace" font-weight="700" fill="#cbd5e1" text-anchor="middle">mcs.matrix~ 32 64 @ramp 20</text>
+    <text class="lang-en" x="590" y="882" font-size="13.5" font-weight="700" fill="#f1f5f9">16×16 Paged Viewport &amp; Anti-Click Interpolation</text>
+    <text class="lang-fr" x="590" y="882" font-size="13.5" font-weight="700" fill="#f1f5f9">Vue 16×16 Fenêtrée &amp; Interpolation Anti-Clic</text>
+    <text class="lang-en" x="590" y="906" font-size="13" fill="#cbd5e1">20 ms Crossfades • Instant Diagonal Patch • Lock &amp; Clear Safety Modes</text>
+    <text class="lang-fr" x="590" y="906" font-size="13" fill="#cbd5e1">Fondus de 20 ms • Patch Diagonal Instantané • Sécurités Lock &amp; Clear</text>
+
+    <!-- Sub-block Lower Left: Reverb -->
+    <rect x="580" y="936" width="232" height="146" rx="6" fill="#0b1a20" stroke="#1a3d36" stroke-width="1.2"/>
+    <rect x="590" y="946" width="165" height="20" rx="3" fill="#122f28" stroke="#10b981" stroke-width="0.6"/>
+    <text x="672" y="960" font-size="10.5" font-family="ui-monospace, monospace" font-weight="700" fill="#6ee7b7" text-anchor="middle">fdn_multireverb.gendsp</text>
+    <text class="lang-en" x="590" y="992" font-size="13.5" font-weight="700" fill="#f1f5f9">4×4 Hadamard Reverb</text>
+    <text class="lang-fr" x="590" y="992" font-size="13.5" font-weight="700" fill="#f1f5f9">Réverb Hadamard 4×4</text>
+    <text class="lang-en" x="590" y="1018" font-size="12.5" fill="#cbd5e1">4×4 Unitary feedback matrix</text>
+    <text class="lang-fr" x="590" y="1018" font-size="12.5" fill="#cbd5e1">Boucle unitaire 4×4 d'Hadamard</text>
+    <text class="lang-en" x="590" y="1040" font-size="12.5" fill="#94a3b8">Lossless energy preservation</text>
+    <text class="lang-fr" x="590" y="1040" font-size="12.5" fill="#94a3b8">Conservation d'énergie sans perte</text>
+    <text class="lang-en" x="590" y="1062" font-size="12" fill="#64748b">Diffuse multichannel tail</text>
+    <text class="lang-fr" x="590" y="1062" font-size="12" fill="#64748b">Queue réverbérante diffuse</text>
+
+    <!-- Sub-block Lower Right: Physical Outs -->
+    <rect x="828" y="936" width="232" height="146" rx="6" fill="#0b1a20" stroke="#1a3d36" stroke-width="1.2"/>
+    <rect x="838" y="946" width="155" height="20" rx="3" fill="#122f28" stroke="#10b981" stroke-width="0.6"/>
+    <text x="915" y="960" font-size="10.5" font-family="ui-monospace, monospace" font-weight="700" fill="#6ee7b7" text-anchor="middle">Dante / DAC 1..64</text>
+    <text class="lang-en" x="838" y="992" font-size="13.5" font-weight="700" fill="#f1f5f9">Physical Multitrack</text>
+    <text class="lang-fr" x="838" y="992" font-size="13.5" font-weight="700" fill="#f1f5f9">Sorties Physiques</text>
+    <text class="lang-en" x="838" y="1018" font-size="12.5" fill="#cbd5e1">Up to 64 discrete physical outs</text>
+    <text class="lang-fr" x="838" y="1018" font-size="12.5" fill="#cbd5e1">Jusqu'à 64 canaux discrets</text>
+    <text class="lang-en" x="838" y="1040" font-size="12.5" fill="#94a3b8">24-bit discrete WAV multitrack</text>
+    <text class="lang-fr" x="838" y="1040" font-size="12.5" fill="#94a3b8">Archivage direct WAV 24-bit</text>
+    <text class="lang-en" x="838" y="1062" font-size="12" fill="#64748b">PA sound system feed</text>
+    <text class="lang-fr" x="838" y="1062" font-size="12" fill="#64748b">Diffusion sonorisation façade</text>
+  </g>
+</svg>
       </div>
 
       <div class="card-grid">
@@ -1042,11 +1323,11 @@
           <h4><span class="lang-en">Manual Single Trigger</span><span class="lang-fr">Déclenchement Manuel Unique</span></h4>
           <p class="lang-en">
             Click <span class="gui-el"><span class="gui-ico">🔘</span> manually trigger a soundfile</span> to dispatch a single ballistic grain immediately.
-            <br>The file selection mode switch <span class="gui-el">Randomly</span> / <span class="gui-el">Sequentially</span> determines whether files are picked randomly from the pool or stepped through sequentially.
+            <br>The file selection mode switch <span class="gui-el">Randomly</span> / <span class="gui-el">Sequentially</span> determines whether files are picked randomly from the pool (urn without repetition) or stepped through sequentially. Enabling <span class="gui-el">Sequentially</span> (<code>playMode 1</code>) automatically resets the sequence index to the first file (<code>0</code>).
           </p>
           <p class="lang-fr">
             Cliquez sur <span class="gui-el"><span class="gui-ico">🔘</span> manually trigger a soundfile</span> pour émettre un grain balistique individuel.
-            <br>L'interrupteur <span class="gui-el">Randomly</span> / <span class="gui-el">Sequentially</span> détermine si les fichiers sont choisis au hasard ou parcourus chronologiquement.
+            <br>L'interrupteur <span class="gui-el">Randomly</span> / <span class="gui-el">Sequentially</span> détermine si les fichiers sont choisis au hasard (urne sans répétition) ou parcourus chronologiquement. L'activation du mode <span class="gui-el">Sequentially</span> (<code>playMode 1</code>) réinitialise automatiquement le compteur au tout premier fichier (index <code>0</code>).
           </p>
         </div>
 
@@ -1184,36 +1465,50 @@
 
       <div class="card-grid">
         <div class="card highlight-cyan">
-          <h4><span class="lang-en">Hardware-Accelerated WebGL Rendering</span><span class="lang-fr">Rendu WebGL Accéléré Matériellement</span></h4>
+          <h4><span class="lang-en">High-Contrast WebGL 3D Rendering</span><span class="lang-fr">Rendu WebGL 3D Haut Contraste</span></h4>
           <p class="lang-en">
-            Powered by Three.js with custom nocturnal shaders:
-            <br>&bull; <strong>32 Amber Glass Spheres:</strong> Represent active polyphonic voices, scaling dynamically with acoustic amplitude.
-            <br>&bull; <strong>Vertical Plumb Lines:</strong> Drop lines connecting each sphere to the floor plane with numerical elevation badges.
-            <br>&bull; <strong>Dynamic Shadows:</strong> Radial floor shadow projection indicating ground position.
-            <br>&bull; <strong>8 ms Anti-Jitter Mask:</strong> Interpolates coordinates smoothly to eliminate visual stepping.
+            Powered by Three.js with high-visibility nocturnal aesthetics:
+            <br>&bull; <strong>32 High-Contrast Yellow Spheres:</strong> Represent active polyphonic voices with bold black voice numbers (1&ndash;32), readable even on low-contrast displays.
+            <br>&bull; <strong>Vertical Plumb Lines &amp; Floor Shadows:</strong> Connect each sphere to its radial yellow ground projection.
+            <br>&bull; <strong>Crisp White Speaker Wireframes:</strong> High-contrast white cube edges with centered speaker names.
+            <br>&bull; <strong>8 ms Anti-Jitter Mask:</strong> Smooth coordinate synchronization eliminating spawn artifacts.
           </p>
           <p class="lang-fr">
-            Animé par Three.js avec shaders sombres sur mesure :
-            <br>&bull; <strong>32 Sphères Ambrées en Verre :</strong> Matérialisent les voix actives, dont le diamètre pulse avec l'amplitude acoustique.
-            <br>&bull; <strong>Lignes de Fil à Plomb :</strong> Relient chaque sphère au plan du sol avec indicateur chiffré d'élévation.
-            <br>&bull; <strong>Ombres Portées :</strong> Projection d'une ombre douce sur le sol situant l'empreinte au sol.
-            <br>&bull; <strong>Masquage Anti-Gigue 8 ms :</strong> Interpolation continue des coordonnées pour éliminer toute saccade visuelle.
+            Animé par Three.js avec une palette nocturne à fort contraste :
+            <br>&bull; <strong>32 Sphères Jaune Vif Haut Contraste :</strong> Matérialisent les voix actives avec numéros noirs lisibles (1&ndash;32), optimisés même pour les écrans peu contrastés.
+            <br>&bull; <strong>Lignes de Fil à Plomb &amp; Ombres :</strong> Relient chaque sphère à sa projection radiale jaune au sol.
+            <br>&bull; <strong>Enceintes à Arêtes Blanches :</strong> Cubes filaires blancs très visibles affichant le nom de chaque haut-parleur.
+            <br>&bull; <strong>Masquage Anti-Gigue 8 ms :</strong> Synchronisation fluide évitant tout artefact visuel à l'apparition des grains.
           </p>
         </div>
 
         <div class="card highlight-gold">
           <h4><span class="lang-en">Drag &amp; Drop Speaker Layouts (CSV / Excel)</span><span class="lang-fr">Glisser-Déposer de Géométries d'Enceintes (CSV / Excel)</span></h4>
           <p class="lang-en">
-            Drag any loudspeaker geometry file (<code>.csv</code> or <code>.xlsx</code>) directly onto the 3D browser window. The visualizer instantly places speaker meshes in 3D space.
-            <br>Pre-packaged studio configurations are included:
-            <br>&bull; <code>gramestudio-speaker-setup.csv</code> (GRAME CNCM concert hall)
-            <br>&bull; <code>maxBstudio-speaker-setup.csv</code> (Max Bruckert personal studio)
+            Drag any loudspeaker geometry file (<code>.csv</code> or <code>.xlsx</code>) directly onto the <strong>Speaker Layout</strong> drop zone (or click to browse) to load the live coordinates from disk without caching:
+            <br>&bull; <code>viewer/gramestudio-speaker-setup.csv</code> (GRAME CNCM 28-speaker 3D dome)
+            <br>&bull; <code>viewer/maxBstudio-speaker-setup.csv</code> (Max Bruckert 7-speaker setup with floor sub)
           </p>
           <p class="lang-fr">
-            Glissez-déposez n'importe quel fichier de disposition d'enceintes (<code>.csv</code> ou <code>.xlsx</code>) directement sur la fenêtre 3D du navigateur. Les enceintes virtuelles sont immédiatement positionnées dans l'espace.
-            <br>Des configurations de studios préconfigurées sont fournies :
-            <br>&bull; <code>gramestudio-speaker-setup.csv</code> (Plateau de concert GRAME CNCM)
-            <br>&bull; <code>maxBstudio-speaker-setup.csv</code> (Studio personnel Max Bruckert)
+            Glissez-déposez n'importe quel fichier de disposition d'enceintes (<code>.csv</code> ou <code>.xlsx</code>) directement dans la zone <strong>Speaker Layout</strong> (ou cliquez pour parcourir) afin de charger dynamiquement le fichier réel depuis le disque sans cache :
+            <br>&bull; <code>viewer/gramestudio-speaker-setup.csv</code> (Dôme 3D 28 enceintes du GRAME CNCM)
+            <br>&bull; <code>viewer/maxBstudio-speaker-setup.csv</code> (Configuration 7 enceintes avec sub au sol du studio Max Bruckert)
+          </p>
+        </div>
+
+        <div class="card">
+          <h4><span class="lang-en">HUD Decluttering &amp; Fullscreen Controls</span><span class="lang-fr">Masquage du HUD &amp; Plein Écran</span></h4>
+          <p class="lang-en">
+            To inspect the virtual 3D room without visual clutter:
+            <br>&bull; <strong>Fullscreen (<span class="gui-el">Fullscreen</span> / Key <code>F</code>):</strong> Located next to the title; expands the viewer on the active display (leaving secondary monitors illuminated on macOS when <em>Displays have separate Spaces</em> is enabled).
+            <br>&bull; <strong>Global HUD Toggle (<span class="gui-el">HUD: ON/OFF</span> / Key <code>H</code>):</strong> Hides or restores all 3 overlay panels at once (<em>Speaker Layout</em>, <em>ADM Reference</em>, and <em>Active Audio Voices</em>).
+            <br>&bull; <strong>Individual Panel Collapse:</strong> Each panel header features a chevron button to fold only that panel into a compact bar.
+          </p>
+          <p class="lang-fr">
+            Pour observer librement la pièce virtuelle sans encombrement visuel :
+            <br>&bull; <strong>Plein Écran (<span class="gui-el">Fullscreen</span> / Touche <code>F</code>) :</strong> Situé à côté du titre ; passe la fenêtre en plein écran sur le moniteur actif (les écrans secondaires restent allumés sous macOS si <em>Les écrans disposent d'espaces distincts</em> est activé).
+            <br>&bull; <strong>Masquage Global (<span class="gui-el">HUD: ON/OFF</span> / Touche <code>H</code>) :</strong> Masque ou réaffiche simultanément les 3 panneaux (<em>Speaker Layout</em>, <em>ADM Reference</em> et <em>Active Audio Voices</em>).
+            <br>&bull; <strong>Repli Individuel :</strong> Chaque panneau dispose d'un bouton chevron pour être replié indépendamment en barre compacte.
           </p>
         </div>
       </div>
@@ -1260,16 +1555,16 @@
         </div>
 
         <div class="card highlight-gold">
-          <h4><span class="lang-en">External Spatial Renderers (UDP 9000)</span><span class="lang-fr">Spatialiseurs Externes (UDP 9000)</span></h4>
+          <h4><span class="lang-en">External Spatial Renderers (UDP 4001 by default)</span><span class="lang-fr">Spatialiseurs Externes (UDP 4001 par défaut)</span></h4>
           <p class="lang-en">
-            Swarm-Mangler can pilot external commercial hardware and software spatializers in parallel:
+            Swarm-Mangler can pilot external commercial hardware and software spatializers in parallel via UDP socket (port <code>4001</code> by default, broadcast or unicast):
             <br>&bull; <strong>Dolby Atmos Production Suite:</strong> direct 3D object metadata routing.
             <br>&bull; <strong>L-Acoustics L-ISA:</strong> sample-accurate source positioning.
             <br>&bull; <strong>IRCAM Spat &amp; Spat Revolution:</strong> direct Cartesian position control.
             <br>&bull; <strong>Meyer Sound Spacemap Go / d&amp;b Soundscape:</strong> object trajectory streaming.
           </p>
           <p class="lang-fr">
-            Swarm-Mangler pilote en parallèle les systèmes et moteurs de diffusion professionnels externes :
+            Swarm-Mangler pilote en parallèle les systèmes et moteurs de diffusion professionnels externes via socket UDP (port <code>4001</code> par défaut, broadcast ou unicast) :
             <br>&bull; <strong>Dolby Atmos Production Suite :</strong> métadonnées d'objets 3D directes.
             <br>&bull; <strong>L-Acoustics L-ISA :</strong> positionnement fin d'objets à faible latence.
             <br>&bull; <strong>IRCAM Spat &amp; Spat Revolution :</strong> pilotage cartésien direct.
@@ -1343,6 +1638,16 @@
             <br>&bull; <strong>Banques d'Entrées :</strong> SRC 1-16 / SRC 17-32.
             <br>&bull; <strong>Banques de Sorties :</strong> OUT 1-16 / OUT 17-32 / OUT 33-48 / OUT 49-64.
             <br>&bull; <strong>Moteur Audio :</strong> Pilote <code>[mcs.matrix~ 32 64 @ramp 20]</code> avec fondus croisés linéaires de 20 ms sans artefact.
+          </p>
+        </div>
+
+        <div class="card highlight-gold">
+          <h4><span class="lang-en">Subwoofer Low-Pass Bus (<code>lp_butterworth.gendsp</code>)</span><span class="lang-fr">Bus Subwoofer Passe-Bas (<code>lp_butterworth.gendsp</code>)</span></h4>
+          <p class="lang-en">
+            A dedicated 4th-order Butterworth low-pass filter (24 dB/octave, cascaded biquads with click-free <code>smooth</code> frequency interpolation, <code>freq</code> default 80 Hz / preset 110 Hz) feeds outputs <code>mc.dac~ 26 27</code> for dedicated subwoofer reinforcement.
+          </p>
+          <p class="lang-fr">
+            Un bus dédié intègre un filtre passe-bas Butterworth d'ordre 4 à pente raide (24 dB/octave, deux biquads en cascade avec lissage sans clic <code>smooth</code>, coupure <code>freq</code> 80 Hz par défaut / 110 Hz dans le patch) vers les sorties <code>mc.dac~ 26 27</code> pour alimenter les caissons de grave.
           </p>
         </div>
       </div>
@@ -1717,7 +2022,7 @@
               <td><span class="gui-el">Randomly / Sequentially</span><br><code>play-mode</code></td>
               <td>Toggle (0 / 1)</td>
               <td>Randomly</td>
-              <td>Switches between random and sequential file picking.<br><em>Bascule entre tirage aléatoire et parcours séquentiel des fichiers.</em></td>
+              <td>Switches between random urn (0) and sequential file picking (1, resets index to 0 on activation).<br><em>Bascule entre tirage aléatoire (0) et parcours séquentiel (1, remet l'index à 0 à l'activation).</em></td>
             </tr>
             <tr>
               <td><span class="gui-el"><span class="gui-ico">🔘</span> arpegiate !</span><br><code>arpeggio</code></td>
