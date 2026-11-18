@@ -276,7 +276,7 @@
         x: 0.0,
         y: 0.0,
         z: 0.0,
-        spawnGraceUntil: 0, // Horodatage autorisant la visibilité
+        spawnGraceUntil: 0, // Timestamp allowing opacity fade-in
         expireTime: 0,
         colorHex: 0xfacc15,
         mesh: null,
@@ -346,7 +346,7 @@
     floorFrame.position.y = 0.001;
     roomGroup.add(floorFrame);
 
-    // 2. Cadre cubique de la pièce
+    // 2. Cubic room wireframe boundary
     const boxGeo = new THREE.BoxGeometry(2.0, 1.0, 2.0);
     const boxEdges = new THREE.EdgesGeometry(boxGeo);
     const boxLineMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.45 });
@@ -354,7 +354,7 @@
     roomBox.position.set(0, 0.5, 0);
     roomGroup.add(roomBox);
 
-    // 3. Ligne médiane d'élévation à mi-hauteur (Y = 0.5)
+    // 3. Mid-elevation reference ring at half-height (Y = 0.5)
     const midLevelGeo = new THREE.BufferGeometry().setFromPoints([
       new THREE.Vector3(-1, 0.5, -1), new THREE.Vector3(1, 0.5, -1),
       new THREE.Vector3(1, 0.5, -1), new THREE.Vector3(1, 0.5, 1),
@@ -372,7 +372,7 @@
     midLevelLines.computeLineDistances();
     roomGroup.add(midLevelLines);
 
-    // 4. Murs arrière et gauche
+    // 4. Rear and left boundary grids
     const backWallGrid = new THREE.GridHelper(2.0, 8, 0x38bdf8, 0x1e293b);
     backWallGrid.rotation.x = Math.PI / 2;
     backWallGrid.position.set(0, 0.5, -1.0);
@@ -385,13 +385,13 @@
     leftWallGrid.scale.set(0.5, 1, 1);
     roomGroup.add(leftWallGrid);
 
-    // 5. Flèche d'axe vers l'avant (-Z)
+    // 5. Directional front arrow indicator (-Z)
     const arrowDir = new THREE.Vector3(0, 0, -1);
     const arrowOrigin = new THREE.Vector3(0, 0.01, 0);
     const arrowHelper = new THREE.ArrowHelper(arrowDir, arrowOrigin, 1.0, 0x06b6d4, 0.12, 0.06);
     roomGroup.add(arrowHelper);
 
-    // 6. Labels cardinaux Arial sans cadre
+    // 6. Cardinal labels
     function makeCardinalLabel(text, colorHex) {
       const canvas = document.createElement('canvas');
       canvas.width = 320;
@@ -912,15 +912,15 @@
           v.z = Math.max(-1.0, Math.min(1.0, -yAdm));
           v.expireTime = now + TIMEOUT_MS;
 
-          // Si la voix s'allume (nouveau son), on applique un micro-délai de grâce de 8 ms
-          // La sphère se cale immédiatement sur les coordonnées sous le capot, mais reste invisible
-          // pendant 8 ms pour absorber tout paquet résiduel venant de Max
+          // When a voice triggers (new note), apply a micro-grace period of 8 ms.
+          // The sphere snaps immediately to coordinates under the hood, but remains invisible
+          // for 8 ms to absorb any residual parameter packet from Max.
           if (!v.active) {
             v.spawnGraceUntil = now + SPAWN_HOLD_MS;
             v.active = true;
           }
 
-          // Mise à jour spatiale directe 1:1 (zéro décalage élastique)
+          // Direct 1:1 spatial positioning (zero spring/elastic lag)
           if (v.mesh) {
             v.mesh.position.set(v.x, v.y, v.z);
             v.mesh.visible = true;
@@ -1240,8 +1240,8 @@
         }
 
         if (v.mesh) {
-          // Pendant les 8 premières millisecondes d'un déclenchement, l'opacité reste à 0
-          // pour laisser le temps à Max d'écraser la position résiduelle sans artefact visible
+          // During the first 8 ms of a trigger, keep opacity at 0
+          // to give Max time to overwrite residual coordinates without visual popping
           const inGracePeriod = now < v.spawnGraceUntil;
 
           const targetOpacity = (v.active && !inGracePeriod) ? 0.88 : 0.0;

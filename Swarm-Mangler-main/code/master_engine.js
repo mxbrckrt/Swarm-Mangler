@@ -373,7 +373,7 @@ function bang() {
     var yStart = Math.random() * 2.0 - 1.0;
     var yEnd = (_spatDur > 0.0) ? (Math.random() * 2.0 - 1.0) : yStart;
 
-    // Convention ADM : plan d'écoute horizontal à Z = 0.0 (oreilles)
+    // ADM Convention: horizontal listening plane at Z = 0.0 (ear level)
     var zStart = 0.0;
     var zEnd = 0.0;
     if (_is3D) {
