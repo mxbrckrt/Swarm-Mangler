@@ -373,12 +373,12 @@ function bang() {
     var yStart = Math.random() * 2.0 - 1.0;
     var yEnd = (_spatDur > 0.0) ? (Math.random() * 2.0 - 1.0) : yStart;
 
-    // Convention ADM : en 2D, l'élévation d'écoute médiane est Z = 0.5
-    var zStart = 0.5;
-    var zEnd = 0.5;
+    // Convention ADM : plan d'écoute horizontal à Z = 0.0 (oreilles)
+    var zStart = 0.0;
+    var zEnd = 0.0;
     if (_is3D) {
-        zStart = Math.random();
-        zEnd = (_spatDur > 0.0) ? Math.random() : zStart;
+        zStart = Math.random() * 2.0 - 1.0;
+        zEnd = (_spatDur > 0.0) ? (Math.random() * 2.0 - 1.0) : zStart;
     }
 
     // Compensated playback duration & transposition calculations

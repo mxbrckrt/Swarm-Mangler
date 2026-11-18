@@ -264,6 +264,7 @@
     const SPAWN_HOLD_MS = 8; // Micro-masque d'allumage anti-jitter
 
     let showSpeakers = true;
+    let is2DMode = false;
     let showSpeakerLabels = true;
 
     // --- VOICES MODEL ---
@@ -648,6 +649,8 @@
       const scaleX = 0.92 / maxX;
       const scaleY = 0.92 / maxY;
       const isSingleHeightPlane = Math.abs(maxZ - minZ) < 0.05;
+      const hasOverhead = rawList.some(s => s.z > 0.3);
+      is2DMode = !hasOverhead || isSingleHeightPlane;
 
       for (let i = 0; i < rawList.length; i++) {
         const item = rawList[i];
@@ -842,7 +845,9 @@
     // =========================================================================
     function parseAndApplyAdm(rawString) {
       if (!rawString) return;
-      const cleanLine = rawString.trim();
+      let cleanLine = rawString.trim();
+      // Strip boolean flag prefix if sent from Node for Max (handled argument)
+      cleanLine = cleanLine.replace(/^(?:false|true)\s+/, "");
 
       if (cleanLine === '/clearsources' || cleanLine === '/clear') {
         clearRemainingSources();
@@ -854,11 +859,15 @@
         window._wsSpeakerList = [];
         return;
       }
-      const spkLayoutMatch = cleanLine.match(/^\/spk\/layout\s+(\S+)\s+(\d+)\s+([-\d\.]+)\s+([-\d\.]+)/);
+      const spkLayoutMatch = cleanLine.match(/^\/spk\/layout\s+(\S+)\s+(\d+)\s+([-\d\.]+)\s+([-\d\.]+)(?:\s+(\d+))?/);
       if (spkLayoutMatch) {
+        if (spkLayoutMatch[5] !== undefined) {
+          is2DMode = (parseInt(spkLayoutMatch[5], 10) === 0);
+        }
+        const modeStr = is2DMode ? "2D Planar" : "3D Dome";
         const dropText = document.getElementById('drop-zone-text');
         if (dropText) {
-          dropText.innerHTML = `<strong>Max Synced:</strong> ${spkLayoutMatch[1]} (${spkLayoutMatch[2]} spk, Ear: ${spkLayoutMatch[3]}m)`;
+          dropText.innerHTML = `<strong>Max Synced:</strong> ${spkLayoutMatch[1]} (${spkLayoutMatch[2]} spk, ${modeStr})`;
         }
         return;
       }
@@ -895,7 +904,11 @@
 
           // Calcul des positions spatiales strictes
           v.x = Math.max(-1.0, Math.min(1.0, xAdm));
-          v.y = Math.max(0.0, Math.min(1.0, (zAdm * 0.5) + 0.5)); // ADM Z [-1..1] -> Three.js Y [0..1] with ear level at 0.5
+          if (is2DMode) {
+            v.y = 0.50; // Locked strictly to horizontal ear level in 2D
+          } else {
+            v.y = Math.max(0.0, Math.min(1.0, (zAdm * 0.5) + 0.5));
+          }
           v.z = Math.max(-1.0, Math.min(1.0, -yAdm));
           v.expireTime = now + TIMEOUT_MS;
 

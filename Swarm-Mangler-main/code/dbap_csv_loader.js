@@ -238,9 +238,14 @@ function read(filename) {
         post("[dbap_csv_loader] Warning: buffer~ '" + bufferName + "' not found or has 0 frames.\n");
     }
     
-    // Outlet 0: Notify gen~ with num_speakers and room_scale
+    // Detect if layout is 3D (has speakers significantly above ear level)
+    var is3D = speakers.some(function(s) { return s.z > 0.3; });
+    post("[dbap_csv_loader] Layout topology: " + (is3D ? "3D DOME" : "2D PLANAR") + "\n");
+
+    // Outlet 0: Notify gen~ and master_engine with num_speakers, room_scale, and is3D
     outlet(0, "num_speakers", count);
     outlet(0, "room_scale", parseFloat(maxRadius.toFixed(2)));
+    outlet(0, "is3D", is3D ? 1 : 0);
     
     // Outlet 1: Speaker names and summary list
     var names = ["speakers", count];
@@ -255,7 +260,7 @@ function read(filename) {
     if (slashIdx !== -1) bareFilename = bareFilename.substring(slashIdx + 1);
     
     outlet(2, "/spk/clear");
-    outlet(2, "/spk/layout", bareFilename, count, parseFloat(earHeight.toFixed(2)), parseFloat(maxRadius.toFixed(2)));
+    outlet(2, "/spk/layout", bareFilename, count, parseFloat(earHeight.toFixed(2)), parseFloat(maxRadius.toFixed(2)), is3D ? 1 : 0);
     for (var m = 0; m < count; m++) {
         outlet(2, "/spk/add", m + 1, speakers[m].name, speakers[m].x, speakers[m].y, parseFloat(speakers[m].z.toFixed(3)), parseFloat(speakers[m].z_raw.toFixed(3)));
     }
